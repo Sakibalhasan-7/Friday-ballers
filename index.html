@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Friday Football Club - App</title>
+    <!-- Tailwind CSS & Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <!-- App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FFC App">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
+        body { font-family: 'Hind Siliguri', sans-serif; background-color: #030712; color: #f3f4f6; }
+    </style>
+</head>
+<body class="min-h-screen pb-24 select-none">
+
+    <!-- Top App Navigation -->
+    <header class="bg-gray-900 border-b border-gray-800 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="bg-emerald-500 text-black px-2.5 py-1 rounded-lg font-black text-sm">FFC</span>
+                <h1 class="text-base font-bold text-white">Friday Football Club</h1>
+            </div>
+            <button onclick="triggerAdmin()" id="adminNavBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-700">
+                <i class="fa-solid fa-lock mr-1" id="lockIcon"></i> <span id="adminBtnText">অ্যাডমিন</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 py-5 space-y-6">
+
+        <!-- Admin Control Box -->
+        <div id="adminPanel" class="hidden bg-gray-900 border-2 border-emerald-500/50 rounded-2xl p-4 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+                <h3 class="text-sm font-bold text-emerald-400"><i class="fa-solid fa-shield-halved mr-1"></i> অ্যাডমিন কন্ট্রোল প্যানেল</h3>
+                <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">সক্রিয়</span>
+            </div>
+
+            <!-- Add Player Form -->
+            <form id="addPlayerForm" class="space-y-3">
+                <p class="text-xs font-bold text-gray-400">+ নতুন প্লেয়ার যোগ করুন</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <input type="text" id="newPlayerName" placeholder="প্লেয়ারের নাম" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
+                    <select id="newPlayerPos" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
+                        <option value="Attacker">Attacker</option>
+                        <option value="Midfielder">Midfielder</option>
+                        <option value="Defender">Defender</option>
+                        <option value="Goalkeeper">Goalkeeper</option>
+                    </select>
+                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2 rounded-xl text-xs">সেভ করুন</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Leaderboard -->
+        <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
+            <h2 class="text-sm font-bold text-amber-400 mb-3"><i class="fa-solid fa-trophy mr-1"></i> লাইভ লিডারবোর্ড</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs text-gray-300">
+                    <thead class="bg-gray-950 text-gray-400 uppercase border-b border-gray-800">
+                        <tr>
+                            <th class="py-2.5 px-3">প্লেয়ার</th>
+                            <th class="py-2.5 px-3">পজিশন</th>
+                            <th class="py-2.5 px-3 text-center">গোল</th>
+                            <th class="py-2.5 px-3 text-center">অ্যাসিস্ট</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardRows" class="divide-y divide-gray-800">
+                        <tr><td colspan="4" class="text-center py-4 text-gray-500">ডাটা লোড হচ্ছে...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Players Squad & Stats Manager -->
+        <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
+            <h2 class="text-sm font-bold text-emerald-400 mb-3"><i class="fa-solid fa-users mr-1"></i> স্কোয়াড ও গোল/অ্যাসিস্ট আপডেট</h2>
+            <div id="playersCardGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <!-- Dynamic Player Cards -->
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDUbCWel8FzP-jGq3aDd-KV7QRV1BpfPKI",
+            authDomain: "friday-football-516c4.firebaseapp.com",
+            projectId: "friday-football-516c4",
+            storageBucket: "friday-football-516c4.firebasestorage.app",
+            messagingSenderId: "316532261804",
+            appId: "1:316532261804:web:3a994420a0c59637c1f009",
+            databaseURL: "https://friday-football-516c4-default-rtdb.firebaseio.com"
+        };
+
+        if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+        const dbRef = firebase.database().ref('ffc_live_v4');
+
+        let isAdminLoggedIn = false;
+        let playersData = {};
+
+        // Realtime Data Sync
+        dbRef.on('value', snapshot => {
+            playersData = snapshot.val() || {};
+            renderApp();
+        });
+
+        // Admin Unlock Logic with PIN: 426790
+        function triggerAdmin() {
+            if (isAdminLoggedIn) {
+                isAdminLoggedIn = false;
+                document.getElementById('adminPanel').classList.add('hidden');
+                document.getElementById('adminBtnText').innerText = "অ্যাডমিন";
+                document.getElementById('lockIcon').className = "fa-solid fa-lock mr-1";
+                renderApp();
+                return;
+            }
+
+            let pin = prompt("অ্যাডমিন পাসওয়ার্ড দিন:");
+            if (pin === "426790") {
+                isAdminLoggedIn = true;
+                document.getElementById('adminPanel').classList.remove('hidden');
+                document.getElementById('adminBtnText').innerText = "লগআউট";
+                document.getElementById('lockIcon').className = "fa-solid fa-unlock mr-1 text-emerald-400";
+                renderApp();
+            } else if (pin !== null) {
+                alert("ভুল পাসওয়ার্ড!");
+            }
+        }
+
+        // Add Player
+        document.getElementById('addPlayerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('newPlayerName').value.trim();
+            const pos = document.getElementById('newPlayerPos').value;
+            const photo = `https://ui-avatars.com/api/?background=10b981&color=000&name=` + encodeURIComponent(name);
+
+            if(name) {
+                dbRef.push({ name, pos, goals: 0, assists: 0, photo });
+                document.getElementById('newPlayerName').value = '';
+            }
+        });
+
+        // Update Stat (+ / -)
+        window.changeStatKey = function(id, field, val) {
+            let current = Number(playersData[id][field]) || 0;
+            let updated = current + val;
+            if (updated < 0) updated = 0;
+
+            let updateObj = {};
+            updateObj[field] = updated;
+            dbRef.child(id).update(updateObj);
+        }
+
+        // Delete Player
+        window.removePlayerNode = function(id) {
+            if(confirm("প্লেয়ারটি মুছে ফেলতে চান?")) {
+                dbRef.child(id).remove();
+            }
+        }
+
+        // Render UI
+        function renderApp() {
+            const grid = document.getElementById('playersCardGrid');
+            const tbody = document.getElementById('leaderboardRows');
+
+            let keys = Object.keys(playersData);
+            
+            if (keys.length === 0) {
+                grid.innerHTML = '<p class="text-xs text-gray-500 col-span-full text-center py-4">কোনো প্লেয়ার নেই।</p>';
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-xs text-gray-500">কোনো ডাটা নেই</td></tr>';
+                return;
+            }
+
+            let list = keys.map(k => ({ id: k, ...playersData[k] }));
+            let sortedList = [...list].sort((a, b) => (Number(b.goals) || 0) - (Number(a.goals) || 0));
+
+            grid.innerHTML = '';
+            list.forEach(p => {
+                let g = Number(p.goals) || 0;
+                let a = Number(p.assists) || 0;
+
+                let controlsHTML = '';
+                if (isAdminLoggedIn) {
+                    controlsHTML = `
+                        <div class="mt-3 pt-2 border-t border-gray-800 grid grid-cols-2 gap-2 text-xs">
+                            <div class="bg-gray-950 p-1.5 rounded-lg flex items-center justify-between border border-gray-800">
+                                <span class="text-gray-400">গোল:</span>
+                                <div class="flex gap-1">
+                                    <button onclick="changeStatKey('${p.id}', 'goals', -1)" class="bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded font-bold">-</button>
+                                    <button onclick="changeStatKey('${p.id}', 'goals', 1)" class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold">+</button>
+                                </div>
+                            </div>
+                            <div class="bg-gray-950 p-1.5 rounded-lg flex items-center justify-between border border-gray-800">
+                                <span class="text-gray-400">অ্যাসিস্ট:</span>
+                                <div class="flex gap-1">
+                                    <button onclick="changeStatKey('${p.id}', 'assists', -1)" class="bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded font-bold">-</button>
+                                    <button onclick="changeStatKey('${p.id}', 'assists', 1)" class="bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded font-bold">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                grid.innerHTML += `
+                    <div class="bg-gray-950 border border-gray-800 p-3 rounded-xl shadow">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2.5">
+                                <img src="${p.photo}" class="w-10 h-10 rounded-full object-cover border border-emerald-500">
+                                <div>
+                                    <h4 class="font-bold text-white text-xs">${p.name}</h4>
+                                    <span class="text-[10px] text-gray-400 bg-gray-900 px-1.5 py-0.5 rounded">${p.pos}</span>
+                                </div>
+                            </div>
+                            ${isAdminLoggedIn ? `<button onclick="removePlayerNode('${p.id}')" class="text-rose-500 text-xs px-2"><i class="fa-solid fa-trash"></i></button>` : ''}
+                        </div>
+                        <div class="flex justify-around bg-gray-900 mt-2.5 py-1.5 rounded-lg text-xs font-bold">
+                            <span class="text-emerald-400">গোল: ${g}</span>
+                            <span class="text-amber-400">অ্যাসিস্ট: ${a}</span>
+                        </div>
+                        ${controlsHTML}
+                    </div>
+                `;
+            });
+
+            tbody.innerHTML = '';
+            sortedList.forEach(p => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-950/50">
+                        <td class="py-2.5 px-3 flex items-center gap-2">
+                            <img src="${p.photo}" class="w-6 h-6 rounded-full object-cover">
+                            <span class="font-bold text-white">${p.name}</span>
+                        </td>
+                        <td class="py-2.5 px-3 text-gray-400">${p.pos}</td>
+                        <td class="py-2.5 px-3 text-center font-bold text-emerald-400">${p.goals || 0}</td>
+                        <td class="py-2.5 px-3 text-center font-bold text-amber-400">${p.assists || 0}</td>
+                    </tr>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>

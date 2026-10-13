@@ -3,29 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friday Football Club - App</title>
-    <!-- Tailwind CSS & Icons -->
+    <title>Friday Football Club - Ultimate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    
-    <!-- App Meta Tags -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="FFC App">
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
         body { font-family: 'Hind Siliguri', sans-serif; background-color: #030712; color: #f3f4f6; }
     </style>
 </head>
-<body class="min-h-screen pb-24 select-none">
+<body class="min-h-screen pb-24">
 
-    <!-- Top App Navigation -->
+    <!-- Navbar -->
     <header class="bg-gray-900 border-b border-gray-800 sticky top-0 z-50 shadow-lg">
-        <div class="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2">
                 <span class="bg-emerald-500 text-black px-2.5 py-1 rounded-lg font-black text-sm">FFC</span>
                 <h1 class="text-base font-bold text-white">Friday Football Club</h1>
@@ -36,7 +28,7 @@
         </div>
     </header>
 
-    <main class="max-w-3xl mx-auto px-4 py-5 space-y-6">
+    <main class="max-w-4xl mx-auto px-4 py-5 space-y-6">
 
         <!-- Admin Control Box -->
         <div id="adminPanel" class="hidden bg-gray-900 border-2 border-emerald-500/50 rounded-2xl p-4 shadow-2xl space-y-4">
@@ -48,7 +40,7 @@
             <!-- Add Player Form -->
             <form id="addPlayerForm" class="space-y-3">
                 <p class="text-xs font-bold text-gray-400">+ নতুন প্লেয়ার যোগ করুন</p>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <input type="text" id="newPlayerName" placeholder="প্লেয়ারের নাম" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
                     <select id="newPlayerPos" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
                         <option value="Attacker">Attacker</option>
@@ -56,7 +48,25 @@
                         <option value="Defender">Defender</option>
                         <option value="Goalkeeper">Goalkeeper</option>
                     </select>
-                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2 rounded-xl text-xs">সেভ করুন</button>
+                    <input type="url" id="newPlayerPhoto" placeholder="ছবি URL (Optional)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
+                    <input type="text" id="newPlayerDesc" placeholder="প্লেয়ার বায়ো/ডেসক্রিপশন (Optional)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
+                    <button type="submit" class="sm:col-span-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2 rounded-xl text-xs">প্লেয়ার সেভ করুন</button>
+                </div>
+            </form>
+
+            <hr class="border-gray-800">
+
+            <!-- Add Match Result Form -->
+            <form id="addMatchForm" class="space-y-3">
+                <p class="text-xs font-bold text-amber-400">+ নতুন ম্যাচ বিবরণী ও টিম রেকর্ড যোগ করুন</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <input type="date" id="matchDate" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
+                    <input type="text" id="matchTitle" placeholder="ম্যাচ শিরোনাম (e.g. 5v5 Turf Battle)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
+                    <input type="text" id="teamA" placeholder="টিম A নাম ও প্লেয়ারসমূহ (e.g. Team Red: Sakib, Alif)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
+                    <input type="text" id="teamB" placeholder="টিম B নাম ও প্লেয়ারসমূহ (e.g. Team Blue: Nirob, Tasbi)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
+                    <input type="text" id="matchScore" placeholder="স্কোর (e.g. 4 - 2)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
+                    <input type="text" id="matchScorers" placeholder="গোলদাতা ও অ্যাসিস্টদাতা (e.g. Sakib 2G, Nirob 1A)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
+                    <button type="submit" class="sm:col-span-2 bg-amber-500 hover:bg-amber-400 text-black font-bold py-2 rounded-xl text-xs">ম্যাচ রিপোর্ট সেভ করুন</button>
                 </div>
             </form>
         </div>
@@ -70,26 +80,58 @@
                         <tr>
                             <th class="py-2.5 px-3">প্লেয়ার</th>
                             <th class="py-2.5 px-3">পজিশন</th>
+                            <th class="py-2.5 px-3 text-center">ম্যাচ</th>
                             <th class="py-2.5 px-3 text-center">গোল</th>
                             <th class="py-2.5 px-3 text-center">অ্যাসিস্ট</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboardRows" class="divide-y divide-gray-800">
-                        <tr><td colspan="4" class="text-center py-4 text-gray-500">ডাটা লোড হচ্ছে...</td></tr>
+                        <tr><td colspan="5" class="text-center py-4 text-gray-500">ডাটা লোড হচ্ছে...</td></tr>
                     </tbody>
                 </table>
             </div>
         </section>
 
-        <!-- Players Squad & Stats Manager -->
+        <!-- Squad Grid -->
         <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
-            <h2 class="text-sm font-bold text-emerald-400 mb-3"><i class="fa-solid fa-users mr-1"></i> স্কোয়াড ও গোল/অ্যাসিস্ট আপডেট</h2>
-            <div id="playersCardGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <!-- Dynamic Player Cards -->
-            </div>
+            <h2 class="text-sm font-bold text-emerald-400 mb-3"><i class="fa-solid fa-users mr-1"></i> স্কোয়াড (প্রোফাইল দেখতে ট্যাপ করুন)</h2>
+            <div id="playersCardGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        </section>
+
+        <!-- Match History -->
+        <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
+            <h2 class="text-sm font-bold text-cyan-400 mb-3"><i class="fa-solid fa-calendar-days mr-1"></i> ম্যাচ রেকর্ড ও টিম ডিটেইলস</h2>
+            <div id="matchesHistoryGrid" class="space-y-3"></div>
         </section>
 
     </main>
+
+    <!-- Individual Player Profile Modal -->
+    <div id="profileModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-4 relative">
+            <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center space-y-2">
+                <img id="modalPhoto" src="" class="w-20 h-20 rounded-full mx-auto object-cover border-4 border-emerald-500 shadow-lg">
+                <h3 id="modalName" class="text-base font-bold text-white"></h3>
+                <span id="modalPos" class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full"></span>
+                <p id="modalDesc" class="text-xs text-gray-400 italic pt-1"></p>
+            </div>
+            <div class="grid grid-cols-3 gap-2 bg-gray-950 p-3 rounded-xl text-center border border-gray-800">
+                <div>
+                    <span class="block text-[10px] text-gray-400 uppercase">ম্যাচ</span>
+                    <span id="modalMatches" class="text-sm font-bold text-cyan-400">0</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] text-gray-400 uppercase">গোল</span>
+                    <span id="modalGoals" class="text-sm font-bold text-emerald-400">0</span>
+                </div>
+                <div>
+                    <span class="block text-[10px] text-gray-400 uppercase">অ্যাসিস্ট</span>
+                    <span id="modalAssists" class="text-sm font-bold text-amber-400">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         const firebaseConfig = {
@@ -103,18 +145,16 @@
         };
 
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-        const dbRef = firebase.database().ref('ffc_live_v4');
+        const dbRefPlayers = firebase.database().ref('ffc_players_v6');
+        const dbRefMatches = firebase.database().ref('ffc_matches_v6');
 
         let isAdminLoggedIn = false;
         let playersData = {};
+        let matchesData = {};
 
-        // Realtime Data Sync
-        dbRef.on('value', snapshot => {
-            playersData = snapshot.val() || {};
-            renderApp();
-        });
+        dbRefPlayers.on('value', snapshot => { playersData = snapshot.val() || {}; renderApp(); });
+        dbRefMatches.on('value', snapshot => { matchesData = snapshot.val() || {}; renderApp(); });
 
-        // Admin Unlock Logic with PIN: 426790
         function triggerAdmin() {
             if (isAdminLoggedIn) {
                 isAdminLoggedIn = false;
@@ -137,20 +177,35 @@
             }
         }
 
-        // Add Player
         document.getElementById('addPlayerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const name = document.getElementById('newPlayerName').value.trim();
             const pos = document.getElementById('newPlayerPos').value;
-            const photo = `https://ui-avatars.com/api/?background=10b981&color=000&name=` + encodeURIComponent(name);
+            const photoInput = document.getElementById('newPlayerPhoto').value.trim();
+            const desc = document.getElementById('newPlayerDesc').value.trim();
+            const photo = photoInput || `https://ui-avatars.com/api/?background=10b981&color=000&name=` + encodeURIComponent(name);
 
             if(name) {
-                dbRef.push({ name, pos, goals: 0, assists: 0, photo });
-                document.getElementById('newPlayerName').value = '';
+                dbRefPlayers.push({ name, pos, matchesPlayed: 0, goals: 0, assists: 0, photo, desc: desc || "Friday Football Club Player" });
+                document.getElementById('addPlayerForm').reset();
             }
         });
 
-        // Update Stat (+ / -)
+        document.getElementById('addMatchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const date = document.getElementById('matchDate').value;
+            const title = document.getElementById('matchTitle').value.trim();
+            const teamA = document.getElementById('teamA').value.trim();
+            const teamB = document.getElementById('teamB').value.trim();
+            const score = document.getElementById('matchScore').value.trim();
+            const scorers = document.getElementById('matchScorers').value.trim();
+
+            if(date && title && score) {
+                dbRefMatches.push({ date, title, teamA, teamB, score, scorers });
+                document.getElementById('addMatchForm').reset();
+            }
+        });
+
         window.changeStatKey = function(id, field, val) {
             let current = Number(playersData[id][field]) || 0;
             let updated = current + val;
@@ -158,53 +213,73 @@
 
             let updateObj = {};
             updateObj[field] = updated;
-            dbRef.child(id).update(updateObj);
+            dbRefPlayers.child(id).update(updateObj);
         }
 
-        // Delete Player
         window.removePlayerNode = function(id) {
-            if(confirm("প্লেয়ারটি মুছে ফেলতে চান?")) {
-                dbRef.child(id).remove();
-            }
+            if(confirm("প্লেয়ারটি মুছে ফেলতে চান?")) dbRefPlayers.child(id).remove();
         }
 
-        // Render UI
+        window.removeMatchNode = function(id) {
+            if(confirm("ম্যাচ রেকর্ডটি মুছে ফেলতে চান?")) dbRefMatches.child(id).remove();
+        }
+
+        window.openProfileModal = function(id) {
+            const p = playersData[id];
+            if(!p) return;
+            document.getElementById('modalName').innerText = p.name;
+            document.getElementById('modalPos').innerText = p.pos;
+            document.getElementById('modalDesc').innerText = p.desc || "Friday Football Club Player";
+            document.getElementById('modalMatches').innerText = p.matchesPlayed || 0;
+            document.getElementById('modalGoals').innerText = p.goals || 0;
+            document.getElementById('modalAssists').innerText = p.assists || 0;
+            document.getElementById('modalPhoto').src = p.photo;
+            document.getElementById('profileModal').classList.remove('hidden');
+        }
+
+        window.closeProfileModal = function() {
+            document.getElementById('profileModal').classList.add('hidden');
+        }
+
         function renderApp() {
             const grid = document.getElementById('playersCardGrid');
             const tbody = document.getElementById('leaderboardRows');
+            const matchGrid = document.getElementById('matchesHistoryGrid');
 
-            let keys = Object.keys(playersData);
-            
-            if (keys.length === 0) {
-                grid.innerHTML = '<p class="text-xs text-gray-500 col-span-full text-center py-4">কোনো প্লেয়ার নেই।</p>';
-                tbody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-xs text-gray-500">কোনো ডাটা নেই</td></tr>';
-                return;
-            }
+            let playerKeys = Object.keys(playersData);
+            let playerList = playerKeys.map(k => ({ id: k, ...playersData[k] }));
+            let sortedList = [...playerList].sort((a, b) => (Number(b.goals) || 0) - (Number(a.goals) || 0));
 
-            let list = keys.map(k => ({ id: k, ...playersData[k] }));
-            let sortedList = [...list].sort((a, b) => (Number(b.goals) || 0) - (Number(a.goals) || 0));
-
-            grid.innerHTML = '';
-            list.forEach(p => {
+            // Render Player Cards
+            grid.innerHTML = playerList.length ? '' : '<p class="text-xs text-gray-500 col-span-full text-center py-4">কোনো প্লেয়ার যোগ করা হয়নি।</p>';
+            playerList.forEach(p => {
+                let m = Number(p.matchesPlayed) || 0;
                 let g = Number(p.goals) || 0;
                 let a = Number(p.assists) || 0;
 
                 let controlsHTML = '';
                 if (isAdminLoggedIn) {
                     controlsHTML = `
-                        <div class="mt-3 pt-2 border-t border-gray-800 grid grid-cols-2 gap-2 text-xs">
-                            <div class="bg-gray-950 p-1.5 rounded-lg flex items-center justify-between border border-gray-800">
-                                <span class="text-gray-400">গোল:</span>
+                        <div class="mt-3 pt-2 border-t border-gray-800 space-y-1.5 text-xs">
+                            <div class="bg-gray-950 p-1 rounded flex items-center justify-between border border-gray-800">
+                                <span class="text-gray-400">ম্যাচ:</span>
                                 <div class="flex gap-1">
-                                    <button onclick="changeStatKey('${p.id}', 'goals', -1)" class="bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded font-bold">-</button>
-                                    <button onclick="changeStatKey('${p.id}', 'goals', 1)" class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold">+</button>
+                                    <button onclick="changeStatKey('${p.id}', 'matchesPlayed', -1)" class="bg-rose-500/20 text-rose-400 px-2 rounded font-bold">-</button>
+                                    <button onclick="changeStatKey('${p.id}', 'matchesPlayed', 1)" class="bg-cyan-500/20 text-cyan-400 px-2 rounded font-bold">+</button>
                                 </div>
                             </div>
-                            <div class="bg-gray-950 p-1.5 rounded-lg flex items-center justify-between border border-gray-800">
+                            <div class="bg-gray-950 p-1 rounded flex items-center justify-between border border-gray-800">
+                                <span class="text-gray-400">গোল:</span>
+                                <div class="flex gap-1">
+                                    <button onclick="changeStatKey('${p.id}', 'goals', -1)" class="bg-rose-500/20 text-rose-400 px-2 rounded font-bold">-</button>
+                                    <button onclick="changeStatKey('${p.id}', 'goals', 1)" class="bg-emerald-500/20 text-emerald-400 px-2 rounded font-bold">+</button>
+                                </div>
+                            </div>
+                            <div class="bg-gray-950 p-1 rounded flex items-center justify-between border border-gray-800">
                                 <span class="text-gray-400">অ্যাসিস্ট:</span>
                                 <div class="flex gap-1">
-                                    <button onclick="changeStatKey('${p.id}', 'assists', -1)" class="bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded font-bold">-</button>
-                                    <button onclick="changeStatKey('${p.id}', 'assists', 1)" class="bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded font-bold">+</button>
+                                    <button onclick="changeStatKey('${p.id}', 'assists', -1)" class="bg-rose-500/20 text-rose-400 px-2 rounded font-bold">-</button>
+                                    <button onclick="changeStatKey('${p.id}', 'assists', 1)" class="bg-amber-500/20 text-amber-400 px-2 rounded font-bold">+</button>
                                 </div>
                             </div>
                         </div>
@@ -214,16 +289,17 @@
                 grid.innerHTML += `
                     <div class="bg-gray-950 border border-gray-800 p-3 rounded-xl shadow">
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-2.5">
-                                <img src="${p.photo}" class="w-10 h-10 rounded-full object-cover border border-emerald-500">
+                            <div onclick="openProfileModal('${p.id}')" class="flex items-center gap-2.5 cursor-pointer">
+                                <img src="${p.photo}" class="w-10 h-10 rounded-full object-cover border border-emerald-500" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}'">
                                 <div>
-                                    <h4 class="font-bold text-white text-xs">${p.name}</h4>
+                                    <h4 class="font-bold text-white text-xs hover:underline">${p.name}</h4>
                                     <span class="text-[10px] text-gray-400 bg-gray-900 px-1.5 py-0.5 rounded">${p.pos}</span>
                                 </div>
                             </div>
                             ${isAdminLoggedIn ? `<button onclick="removePlayerNode('${p.id}')" class="text-rose-500 text-xs px-2"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
-                        <div class="flex justify-around bg-gray-900 mt-2.5 py-1.5 rounded-lg text-xs font-bold">
+                        <div onclick="openProfileModal('${p.id}')" class="flex justify-around bg-gray-900 mt-2.5 py-1.5 rounded-lg text-xs font-bold cursor-pointer">
+                            <span class="text-cyan-400">ম্যাচ: ${m}</span>
                             <span class="text-emerald-400">গোল: ${g}</span>
                             <span class="text-amber-400">অ্যাসিস্ট: ${a}</span>
                         </div>
@@ -232,18 +308,51 @@
                 `;
             });
 
-            tbody.innerHTML = '';
+            // Render Leaderboard
+            tbody.innerHTML = sortedList.length ? '' : '<tr><td colspan="5" class="text-center py-4 text-xs text-gray-500">কোনো ডাটা নেই</td></tr>';
             sortedList.forEach(p => {
                 tbody.innerHTML += `
-                    <tr class="hover:bg-gray-950/50">
+                    <tr class="hover:bg-gray-950/50 cursor-pointer" onclick="openProfileModal('${p.id}')">
                         <td class="py-2.5 px-3 flex items-center gap-2">
-                            <img src="${p.photo}" class="w-6 h-6 rounded-full object-cover">
+                            <img src="${p.photo}" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}'">
                             <span class="font-bold text-white">${p.name}</span>
                         </td>
                         <td class="py-2.5 px-3 text-gray-400">${p.pos}</td>
+                        <td class="py-2.5 px-3 text-center font-bold text-cyan-400">${p.matchesPlayed || 0}</td>
                         <td class="py-2.5 px-3 text-center font-bold text-emerald-400">${p.goals || 0}</td>
                         <td class="py-2.5 px-3 text-center font-bold text-amber-400">${p.assists || 0}</td>
                     </tr>
+                `;
+            });
+
+            // Render Matches History
+            let matchKeys = Object.keys(matchesData);
+            let matchQueue = matchKeys.map(k => ({ id: k, ...matchesData[k] })).reverse();
+            matchGrid.innerHTML = matchQueue.length ? '' : '<p class="text-xs text-gray-500 text-center py-2">কোনো ম্যাচ রেকর্ড পাওয়া যায়নি।</p>';
+            
+            matchQueue.forEach(m => {
+                matchGrid.innerHTML += `
+                    <div class="bg-gray-950 border border-gray-800 p-3.5 rounded-xl space-y-2 shadow">
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+                            <h4 class="text-xs font-bold text-amber-400"><i class="fa-solid fa-futbol mr-1"></i> ${m.title}</h4>
+                            <span class="text-[10px] text-gray-400"><i class="fa-regular fa-calendar mr-1"></i>${m.date}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="bg-gray-900 p-2 rounded-lg border border-gray-800/80">
+                                <span class="text-emerald-400 font-bold block">টিম A / লাল:</span>
+                                <p class="text-[11px] text-gray-300">${m.teamA}</p>
+                            </div>
+                            <div class="bg-gray-900 p-2 rounded-lg border border-gray-800/80">
+                                <span class="text-cyan-400 font-bold block">টিম B / নীল:</span>
+                                <p class="text-[11px] text-gray-300">${m.teamB}</p>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center pt-1 text-xs">
+                            <span class="font-bold text-white">ফলাফল: <span class="text-amber-400">${m.score}</span></span>
+                            ${m.scorers ? `<span class="text-[11px] text-gray-400"><i class="fa-solid fa-star mr-1 text-amber-400"></i>${m.scorers}</span>` : ''}
+                            ${isAdminLoggedIn ? `<button onclick="removeMatchNode('${m.id}')" class="text-rose-500 text-xs px-2"><i class="fa-solid fa-trash"></i></button>` : ''}
+                        </div>
+                    </div>
                 `;
             });
         }

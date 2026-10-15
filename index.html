@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friday Football Club - Complete Professional Edition</title>
+    <title>Friday Football Club - Professional Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -82,10 +82,10 @@
     <nav class="bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 sticky top-[53px] z-30 shadow-sm">
         <div class="max-w-4xl mx-auto px-2 flex justify-around py-2 text-xs font-bold">
             <button onclick="switchTab('homeTab')" id="btnHomeTab" class="tab-btn px-3 py-1.5 rounded-xl text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 transition flex items-center gap-1.5">
-                <i class="fa-solid fa-house"></i> হোম ও ফি
+                <i class="fa-solid fa-house"></i> হোম
             </button>
             <button onclick="switchTab('squadTab')" id="btnSquadTab" class="tab-btn px-3 py-1.5 rounded-xl text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition flex items-center gap-1.5">
-                <i class="fa-solid fa-trophy"></i> স্কোয়াড ও লিডারবোর্ড
+                <i class="fa-solid fa-trophy"></i> স্কোয়াড ও প্রোফাইল
             </button>
             <button onclick="switchTab('matchesTab')" id="btnMatchesTab" class="tab-btn px-3 py-1.5 rounded-xl text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white transition flex items-center gap-1.5">
                 <i class="fa-solid fa-calendar-days"></i> ম্যাচ রেকর্ড
@@ -161,54 +161,10 @@
             </form>
         </div>
 
-        <!-- TAB 1: HOME & MATCH FEE TRACKER TAB -->
+        <!-- TAB 1: HOME TAB (Leaderboard first, then Attendance, then Fee Tracker) -->
         <div id="homeTab" class="tab-content space-y-6">
-            <!-- Attendance RSVP Section -->
-            <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
-                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
-                    <h2 class="text-sm font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-clipboard-user mr-1"></i> আসন্ন ম্যাচে কে কে খেলবে? (RSVP)</h2>
-                    <span id="attendingCount" class="text-xs bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">০ জন নিশ্চিত</span>
-                </div>
-                <p class="text-xs text-gray-500 dark:text-gray-400">আপনি কি আগামী শুক্রবার খেলছেন? উপস্থিতি নিশ্চিত করুন:</p>
-                <div class="flex gap-2">
-                    <button onclick="toggleAttendance(true)" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2.5 rounded-xl text-xs transition">
-                        <i class="fa-solid fa-circle-check mr-1"></i> খেলব (Playing)
-                    </button>
-                    <button onclick="toggleAttendance(false)" class="flex-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-500 font-bold py-2.5 rounded-xl text-xs border border-rose-500/30 transition">
-                        <i class="fa-solid fa-circle-xmark mr-1"></i> খেলব না (Not Playing)
-                    </button>
-                </div>
-                <div id="attendingListContainer" class="flex flex-wrap gap-1.5 pt-2">
-                    <!-- Dynamic Attending Players -->
-                </div>
-            </section>
-
-            <!-- Turf Match Fee / Due Tracker -->
-            <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
-                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
-                    <h2 class="text-sm font-bold text-amber-600 dark:text-amber-400"><i class="fa-solid fa-wallet mr-1"></i> ম্যাচ ফি / চাঁদা ট্র্যাকার (Paid/Due)</h2>
-                    <span class="text-xs text-gray-400">টার্ফ ও বল ফান্ড</span>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead class="bg-gray-100 dark:bg-gray-950 text-gray-500 uppercase border-b border-gray-200 dark:border-gray-800">
-                            <tr>
-                                <th class="py-2 px-3">প্লেয়ার</th>
-                                <th class="py-2 px-3 text-center">স্ট্যাটাস</th>
-                                <th id="feeActionHeader" class="py-2 px-3 text-right hidden">অ্যাকশন (অ্যাডমিন)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="feeTrackerRows" class="divide-y divide-gray-200 dark:divide-gray-800">
-                            <!-- Dynamic Fee Rows -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-
-        <!-- TAB 2: SQUAD & LEADERBOARD TAB -->
-        <div id="squadTab" class="tab-content hidden space-y-6">
-            <!-- Leaderboard -->
+            
+            <!-- Leaderboard at the very top of Home -->
             <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl">
                 <h2 class="text-sm font-bold text-amber-600 dark:text-amber-400 mb-3"><i class="fa-solid fa-trophy mr-1"></i> লাইভ লিডারবোর্ড</h2>
                 <div class="overflow-x-auto">
@@ -229,6 +185,44 @@
                 </div>
             </section>
 
+            <!-- Attendance RSVP Section -->
+            <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                    <h2 class="text-sm font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-clipboard-user mr-1"></i> আসন্ন ম্যাচে কে কে খেলবে? (RSVP)</h2>
+                    <span id="attendingCount" class="text-xs bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">০ জন নিশ্চিত</span>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400">আপনি কি আগামী শুক্রবার খেলছেন? উপস্থিতি নিশ্চিত করুন:</p>
+                <div class="flex gap-2">
+                    <button onclick="toggleAttendance(true)" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2.5 rounded-xl text-xs transition">
+                        <i class="fa-solid fa-circle-check mr-1"></i> খেলব (Playing)
+                    </button>
+                    <button onclick="toggleAttendance(false)" class="flex-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-500 font-bold py-2.5 rounded-xl text-xs border border-rose-500/30 transition">
+                        <i class="fa-solid fa-circle-xmark mr-1"></i> খেলব না (Not Playing)
+                    </button>
+                </div>
+                <div id="attendingListContainer" class="flex flex-wrap gap-1.5 pt-2">
+                    <!-- Dynamic Attending Players -->
+                </div>
+            </section>
+
+            <!-- Turf Match Fee / Due Tracker (Clean Modern Cards placed after leaderboard & RSVP) -->
+            <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                    <div>
+                        <h2 class="text-sm font-bold text-amber-600 dark:text-amber-400"><i class="fa-solid fa-wallet mr-1"></i> ম্যাচ ফি / চাঁদা ট্র্যাকার (Paid/Due)</h2>
+                        <p class="text-[10px] text-gray-400 mt-0.5">টার্ফ ও বল ফান্ডের বর্তমান স্ট্যাটাস</p>
+                    </div>
+                    <span id="feeSummaryBadge" class="text-[11px] bg-amber-500/20 text-amber-600 dark:text-amber-300 px-2.5 py-1 rounded-xl font-bold border border-amber-500/30">হিসাব লোড হচ্ছে...</span>
+                </div>
+                
+                <div id="feeTrackerGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 pt-1">
+                    <!-- Dynamic Fee Cards -->
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 2: SQUAD & PROFILE TAB -->
+        <div id="squadTab" class="tab-content hidden space-y-6">
             <!-- Squad Grid & Filters -->
             <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
                 <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
@@ -357,7 +351,6 @@
         const dbRefAttendance = firebase.database().ref('ffc_attendance_v6');
         const dbRefFees = firebase.database().ref('ffc_fees_v6');
 
-        // Preset Unique PIN Mapping for Squad
         const playerPinMap = {
             "Sakib Al hasan": "7842",
             "Abu wali siddique": "3145",
@@ -579,40 +572,46 @@
         }
 
         function renderFeeTracker() {
-            const tbody = document.getElementById('feeTrackerRows');
-            const actionHeader = document.getElementById('feeActionHeader');
+            const grid = document.getElementById('feeTrackerGrid');
+            const summaryBadge = document.getElementById('feeSummaryBadge');
             let playerKeys = Object.keys(playersData);
 
-            if(isAdminLoggedIn && actionHeader) {
-                actionHeader.classList.remove('hidden');
-            } else if(actionHeader) {
-                actionHeader.classList.add('hidden');
+            let paidCount = 0;
+            playerKeys.forEach(k => {
+                if((feesData[k] || "Due") === "Paid") paidCount++;
+            });
+
+            if(summaryBadge) {
+                summaryBadge.innerText = `পেইড: ${paidCount} / ${playerKeys.length} জন`;
             }
 
-            if(tbody) {
-                tbody.innerHTML = playerKeys.length ? '' : '<tr><td colspan="3" class="text-center py-4 text-gray-400">প্লেয়ার ডাটা পাওয়া যায়নি</td></tr>';
+            if(grid) {
+                grid.innerHTML = playerKeys.length ? '' : '<p class="text-center py-4 text-gray-400 col-span-full text-xs">প্লেয়ার ডাটা পাওয়া যায়নি</p>';
                 playerKeys.forEach(k => {
                     let p = playersData[k];
                     let status = feesData[k] || "Due";
-                    let statusBadge = status === "Paid" 
-                        ? '<span class="bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px] font-bold"><i class="fa-solid fa-check mr-1"></i> পেইড (Paid)</span>'
-                        : '<span class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2 py-0.5 rounded text-[11px] font-bold"><i class="fa-solid fa-clock mr-1"></i> বাকি (Due)</span>';
+                    let isPaid = status === "Paid";
 
-                    let actionTD = isAdminLoggedIn ? `
-                        <td class="py-2 px-3 text-right">
-                            <button onclick="toggleFeeStatus('${k}')" class="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-cyan-600 dark:text-cyan-300 px-2.5 py-1 rounded text-[10px] border border-gray-300 dark:border-gray-700 font-bold transition">স্ট্যাটাস বদলান</button>
-                        </td>
-                    ` : '';
+                    let statusBadge = isPaid 
+                        ? '<span class="bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1"><i class="fa-solid fa-check"></i> পেইড</span>'
+                        : '<span class="bg-rose-500/20 text-rose-500 border border-rose-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1"><i class="fa-solid fa-clock"></i> বাকি</span>';
 
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-950/40">
-                            <td class="py-2 px-3 font-bold flex items-center gap-2">
-                                <img src="${p.photo}" class="w-5 h-5 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=000&name=${encodeURIComponent(p.name)}'">
-                                ${p.name}
-                            </td>
-                            <td class="py-2 px-3 text-center">${statusBadge}</td>
-                            ${actionTD}
-                        </tr>
+                    let adminActionAttr = isAdminLoggedIn ? `onclick="toggleFeeStatus('${k}')" title="স্ট্যাটাস বদলাতে ক্লিক করুন"` : '';
+                    let cursorStyle = isAdminLoggedIn ? 'cursor-pointer hover:border-emerald-500/50' : '';
+
+                    grid.innerHTML += `
+                        <div ${adminActionAttr} class="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-2.5 rounded-xl flex items-center justify-between shadow-sm transition ${cursorStyle}">
+                            <div class="flex items-center gap-2">
+                                <img src="${p.photo}" class="w-8 h-8 rounded-full object-cover border border-gray-300 dark:border-gray-700" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=000&name=${encodeURIComponent(p.name)}'">
+                                <div>
+                                    <h4 class="font-bold text-xs text-gray-800 dark:text-gray-200">${p.name}</h4>
+                                    <span class="text-[9px] text-gray-400">${p.pos}</span>
+                                </div>
+                            </div>
+                            <div>
+                                ${statusBadge}
+                            </div>
+                        </div>
                     `;
                 });
             }
@@ -864,7 +863,7 @@
 
             let sortedList = [...playerList].sort((a, b) => (Number(b.goals) || 0) - (Number(a.goals) || 0));
 
-            // Render Player Cards
+            // Render Player Cards (Squad Tab)
             if(grid) {
                 grid.innerHTML = playerList.length ? '' : '<p class="text-xs text-gray-400 col-span-full text-center py-4">কোনো প্লেয়ার খুঁজে পাওয়া যায়নি।</p>';
                 playerList.forEach(p => {
@@ -932,7 +931,7 @@
                 });
             }
 
-            // Render Leaderboard
+            // Render Leaderboard (Home Tab)
             if(tbody) {
                 tbody.innerHTML = sortedList.length ? '' : '<tr><td colspan="5" class="text-center py-4 text-xs text-gray-400">কোনো ডাটা নেই</td></tr>';
                 sortedList.forEach(p => {

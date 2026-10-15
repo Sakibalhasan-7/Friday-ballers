@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friday Football Club - Ultimate Clean & Secure</title>
+    <title>Friday Football Club - Tabbed & Pro Ultimate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -13,7 +13,7 @@
         body { font-family: 'Hind Siliguri', sans-serif; background-color: #030712; color: #f3f4f6; }
     </style>
 </head>
-<body class="min-h-screen pb-24">
+<body class="min-h-screen pb-28">
 
     <!-- Player Secure Login / Visitor Modal -->
     <div id="loginModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
@@ -70,19 +70,27 @@
         </div>
     </header>
 
+    <!-- Bottom / Main Navigation Tabs -->
+    <nav class="bg-gray-900/90 backdrop-blur border-b border-gray-800 sticky top-[53px] z-30 shadow">
+        <div class="max-w-4xl mx-auto px-2 flex justify-around py-2 text-xs font-bold">
+            <button onclick="switchTab('homeTab')" id="btnHomeTab" class="tab-btn px-3 py-1.5 rounded-xl text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 transition flex items-center gap-1.5">
+                <i class="fa-solid fa-house"></i> হোম
+            </button>
+            <button onclick="switchTab('squadTab')" id="btnSquadTab" class="tab-btn px-3 py-1.5 rounded-xl text-gray-400 hover:text-white transition flex items-center gap-1.5">
+                <i class="fa-solid fa-users"></i> স্কোয়াড ও লিডারবোর্ড
+            </button>
+            <button onclick="switchTab('matchesTab')" id="btnMatchesTab" class="tab-btn px-3 py-1.5 rounded-xl text-gray-400 hover:text-white transition flex items-center gap-1.5">
+                <i class="fa-solid fa-calendar-days"></i> ম্যাচ ও উপস্থিতি
+            </button>
+            <button onclick="switchTab('chatTab')" id="btnChatTab" class="tab-btn px-3 py-1.5 rounded-xl text-gray-400 hover:text-white transition flex items-center gap-1.5">
+                <i class="fa-solid fa-comments"></i> চ্যাট ওয়াল
+            </button>
+        </div>
+    </nav>
+
     <main class="max-w-4xl mx-auto px-4 py-5 space-y-6">
 
-        <!-- Live Notice Board -->
-        <div id="noticeBoardBox" class="bg-gradient-to-r from-emerald-950/80 via-gray-900 to-gray-900 border border-emerald-500/40 rounded-2xl p-3.5 shadow-lg flex items-center gap-3">
-            <div class="bg-emerald-500 text-black px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 shrink-0 animate-pulse">
-                <i class="fa-solid fa-bullhorn"></i> নোটিশ
-            </div>
-            <div class="overflow-hidden whitespace-nowrap w-full">
-                <p id="noticeTextContent" class="text-xs text-emerald-300 font-medium">আগামী শুক্রবার বিকেল ৪টায় ৫v৫ রোমাঞ্চকর ম্যাচ অনুষ্ঠিত হবে। সবাই সময়মতো উপস্থিত থাকবেন!</p>
-            </div>
-        </div>
-
-        <!-- Admin Control Box -->
+        <!-- Admin Control Box (Accessible from anywhere if admin) -->
         <div id="adminPanel" class="hidden bg-gray-900 border-2 border-emerald-500/50 rounded-2xl p-4 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b border-gray-800 pb-2">
                 <h3 class="text-sm font-bold text-emerald-400"><i class="fa-solid fa-shield-halved mr-1"></i> অ্যাডমিন কন্ট্রোল প্যানেল</h3>
@@ -135,68 +143,152 @@
             </form>
         </div>
 
-        <!-- Head-to-Head Comparison Section -->
-        <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
-            <h2 class="text-sm font-bold text-purple-400"><i class="fa-solid fa-scale-balanced mr-1"></i> হেড-টু-হেড প্লেয়ার তুলনা</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                    <label class="block text-[10px] text-gray-400 mb-1">প্রথম প্লেয়ার:</label>
-                    <select id="h2hPlayer1" onchange="renderH2HComparison()" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+        <!-- TAB 1: HOME TAB -->
+        <div id="homeTab" class="tab-content space-y-6">
+            <!-- Live Notice Board -->
+            <div id="noticeBoardBox" class="bg-gradient-to-r from-emerald-950/80 via-gray-900 to-gray-900 border border-emerald-500/40 rounded-2xl p-3.5 shadow-lg flex items-center gap-3">
+                <div class="bg-emerald-500 text-black px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 shrink-0 animate-pulse">
+                    <i class="fa-solid fa-bullhorn"></i> নোটিশ
                 </div>
-                <div>
-                    <label class="block text-[10px] text-gray-400 mb-1">দ্বিতীয় প্লেয়ার:</label>
-                    <select id="h2hPlayer2" onchange="renderH2HComparison()" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+                <div class="overflow-hidden whitespace-nowrap w-full">
+                    <p id="noticeTextContent" class="text-xs text-emerald-300 font-medium">আগামী শুক্রবার বিকেল ৪টায় ৫v৫ রোমাঞ্চকর ম্যাচ অনুষ্ঠিত হবে। সবাই সময়মতো উপস্থিত থাকবেন!</p>
                 </div>
             </div>
-            <div id="h2hResultBox" class="grid grid-cols-3 gap-2 bg-gray-950 p-3 rounded-xl border border-gray-800 text-center text-xs">
-                <!-- Dynamic Comparison Result -->
+
+            <!-- Match Attendance / RSVP Section (Who is playing this Friday) -->
+            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+                    <h2 class="text-sm font-bold text-emerald-400"><i class="fa-solid fa-clipboard-user mr-1"></i> আসন্ন ম্যাচে কে কে খেলবে? (RSVP)</h2>
+                    <span id="attendingCount" class="text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">০ জন নিশ্চিত</span>
+                </div>
+                <p class="text-xs text-gray-400">আপনি কি আগামী শুক্রবার খেলছেন? নিচের বাটনে ক্লিক করে উপস্থিতি নিশ্চিত করুন:</p>
+                <div class="flex gap-2">
+                    <button onclick="toggleAttendance(true)" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2 rounded-xl text-xs transition">
+                        <i class="fa-solid fa-circle-check mr-1"></i> খেলব (Playing)
+                    </button>
+                    <button onclick="toggleAttendance(false)" class="flex-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold py-2 rounded-xl text-xs border border-rose-500/30 transition">
+                        <i class="fa-solid fa-circle-xmark mr-1"></i> খেলব না (Not Playing)
+                    </button>
+                </div>
+                <div id="attendingListContainer" class="flex flex-wrap gap-1.5 pt-2">
+                    <!-- Dynamic Attending Player Chips -->
+                </div>
+            </section>
+
+            <!-- Turf Match Fee / Due Tracker -->
+            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+                    <h2 class="text-sm font-bold text-amber-400"><i class="fa-solid fa-wallet mr-1"></i> ম্যাচ ফি / চাঁদা ট্র্যাকার</h2>
+                    <span class="text-xs text-gray-400">টার্ফ ও বল ফান্ড</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-300">
+                        <thead class="bg-gray-950 text-gray-400 uppercase border-b border-gray-800">
+                            <tr>
+                                <th class="py-2 px-3">প্লেয়ার</th>
+                                <th class="py-2 px-3 text-center">স্ট্যাটাস</th>
+                                <th id="feeActionHeader" class="py-2 px-3 text-right hidden">অ্যাকশন</th>
+                            </tr>
+                        </thead>
+                        <tbody id="feeTrackerRows" class="divide-y divide-gray-800">
+                            <!-- Dynamic Fee Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <!-- TAB 2: SQUAD & LEADERBOARD TAB -->
+        <div id="squadTab" class="tab-content hidden space-y-6">
+            <!-- Search & Position Filter -->
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] text-gray-400 mb-1">প্লেয়ার খুঁজুন:</label>
+                        <input type="text" id="playerSearchInput" oninput="renderApp()" placeholder="নাম দিয়ে সার্চ করুন..." class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-400 mb-1">পজিশন ফিল্টার:</label>
+                        <select id="positionFilterSelect" onchange="renderApp()" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
+                            <option value="">সকল পজিশন</option>
+                            <option value="Attacker">Attacker</option>
+                            <option value="Midfielder">Midfielder</option>
+                            <option value="Defender">Defender</option>
+                            <option value="Goalkeeper">Goalkeeper</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-        </section>
 
-        <!-- Leaderboard -->
-        <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
-            <h2 class="text-sm font-bold text-amber-400 mb-3"><i class="fa-solid fa-trophy mr-1"></i> লাইভ লিডারবোর্ড</h2>
-            <div class="overflow-x-auto">
-                <table class="w-full text-left text-xs text-gray-300">
-                    <thead class="bg-gray-950 text-gray-400 uppercase border-b border-gray-800">
-                        <tr>
-                            <th class="py-2.5 px-3">প্লেয়ার</th>
-                            <th class="py-2.5 px-3">পজিশন</th>
-                            <th class="py-2.5 px-3 text-center">ম্যাচ</th>
-                            <th class="py-2.5 px-3 text-center">গোল</th>
-                            <th class="py-2.5 px-3 text-center">অ্যাসিস্ট</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboardRows" class="divide-y divide-gray-800">
-                        <tr><td colspan="5" class="text-center py-4 text-gray-500">ডাটা লোড হচ্ছে...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+            <!-- Head-to-Head Comparison Section -->
+            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <h2 class="text-sm font-bold text-purple-400"><i class="fa-solid fa-scale-balanced mr-1"></i> হেড-টু-হেড প্লেয়ার তুলনা</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-[10px] text-gray-400 mb-1">প্রথম প্লেয়ার:</label>
+                        <select id="h2hPlayer1" onchange="renderH2HComparison()" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] text-gray-400 mb-1">দ্বিতীয় প্লেয়ার:</label>
+                        <select id="h2hPlayer2" onchange="renderH2HComparison()" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white"></select>
+                    </div>
+                </div>
+                <div id="h2hResultBox" class="grid grid-cols-3 gap-2 bg-gray-950 p-3 rounded-xl border border-gray-800 text-center text-xs">
+                    <!-- Dynamic Comparison Result -->
+                </div>
+            </section>
 
-        <!-- Squad Grid -->
-        <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
-            <h2 class="text-sm font-bold text-emerald-400 mb-3"><i class="fa-solid fa-users mr-1"></i> স্কোয়াড (প্রোফাইল দেখতে ট্যাপ করুন)</h2>
-            <div id="playersCardGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-        </section>
+            <!-- Leaderboard -->
+            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
+                <h2 class="text-sm font-bold text-amber-400 mb-3"><i class="fa-solid fa-trophy mr-1"></i> লাইভ লিডারবোর্ড</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-gray-300">
+                        <thead class="bg-gray-950 text-gray-400 uppercase border-b border-gray-800">
+                            <tr>
+                                <th class="py-2.5 px-3">প্লেয়ার</th>
+                                <th class="py-2.5 px-3">পজিশন</th>
+                                <th class="py-2.5 px-3 text-center">ম্যাচ</th>
+                                <th class="py-2.5 px-3 text-center">গোল</th>
+                                <th class="py-2.5 px-3 text-center">অ্যাসিস্ট</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboardRows" class="divide-y divide-gray-800">
+                            <tr><td colspan="5" class="text-center py-4 text-gray-500">ডাটা লোড হচ্ছে...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-        <!-- Match History & Comments -->
-        <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
-            <h2 class="text-sm font-bold text-cyan-400 mb-3"><i class="fa-solid fa-calendar-days mr-1"></i> ম্যাচ রেকর্ড ও আলোচনা</h2>
-            <div id="matchesHistoryGrid" class="space-y-4"></div>
-        </section>
+            <!-- Squad Grid -->
+            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
+                <h2 class="text-sm font-bold text-emerald-400 mb-3"><i class="fa-solid fa-users mr-1"></i> স্কোয়াড (প্রোফাইল দেখতে ট্যাপ করুন)</h2>
+                <div id="playersCardGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+            </section>
+        </div>
 
-        <!-- Club Wall Chat Board -->
-        <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
-            <h2 class="text-sm font-bold text-emerald-400"><i class="fa-solid fa-comments mr-1"></i> ক্লাব ওয়াল (লাইভ চ্যাট বোর্ড)</h2>
-            <div id="chatMessagesContainer" class="bg-gray-950 border border-gray-800 rounded-xl p-3 h-56 overflow-y-auto space-y-2.5 text-xs">
-                <!-- Chat Messages -->
-            </div>
-            <form id="chatForm" class="flex gap-2">
-                <input type="text" id="chatInputMessage" placeholder="আপনার বার্তা এখানে লিখুন..." class="flex-1 bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white" required>
-                <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-4 py-2.5 rounded-xl text-xs"><i class="fa-solid fa-paper-plane"></i></button>
-            </form>
-        </section>
+        <!-- TAB 3: MATCHES & COMMENTS TAB -->
+        <div id="matchesTab" class="tab-content hidden space-y-6">
+            <!-- Match History & Comments -->
+            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
+                <h2 class="text-sm font-bold text-cyan-400 mb-3"><i class="fa-solid fa-calendar-days mr-1"></i> ম্যাচ রেকর্ড ও আলোচনা</h2>
+                <div id="matchesHistoryGrid" class="space-y-4"></div>
+            </section>
+        </div>
+
+        <!-- TAB 4: CHAT WALL TAB -->
+        <div id="chatTab" class="tab-content hidden space-y-6">
+            <!-- Club Wall Chat Board -->
+            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <h2 class="text-sm font-bold text-emerald-400"><i class="fa-solid fa-comments mr-1"></i> ক্লাব ওয়াল (লাইভ চ্যাট বোর্ড)</h2>
+                <div id="chatMessagesContainer" class="bg-gray-950 border border-gray-800 rounded-xl p-3 h-80 overflow-y-auto space-y-2.5 text-xs">
+                    <!-- Chat Messages -->
+                </div>
+                <form id="chatForm" class="flex gap-2">
+                    <input type="text" id="chatInputMessage" placeholder="আপনার বার্তা এখানে লিখুন..." class="flex-1 bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white" required>
+                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-4 py-2.5 rounded-xl text-xs"><i class="fa-solid fa-paper-plane"></i></button>
+                </form>
+            </section>
+        </div>
 
     </main>
 
@@ -258,6 +350,8 @@
         const dbRefNotice = firebase.database().ref('ffc_notice_v6');
         const dbRefChat = firebase.database().ref('ffc_chat_v6');
         const dbRefComments = firebase.database().ref('ffc_comments_v6');
+        const dbRefAttendance = firebase.database().ref('ffc_attendance_v6');
+        const dbRefFees = firebase.database().ref('ffc_fees_v6');
 
         // Preset Unique PIN Mapping for Squad
         const playerPinMap = {
@@ -285,6 +379,8 @@
         let playersData = {};
         let matchesData = {};
         let commentsData = {};
+        let attendanceData = {};
+        let feesData = {};
         let currentLoggedInUser = localStorage.getItem('ffc_current_user') || "";
         let currentLoggedInPlayerId = localStorage.getItem('ffc_current_player_id') || "";
 
@@ -298,6 +394,8 @@
         });
         dbRefChat.on('value', snapshot => { renderChatMessages(snapshot.val() || {}); });
         dbRefComments.on('value', snapshot => { commentsData = snapshot.val() || {}; renderApp(); });
+        dbRefAttendance.on('value', snapshot => { attendanceData = snapshot.val() || {}; renderAttendanceList(); });
+        dbRefFees.on('value', snapshot => { feesData = snapshot.val() || {}; renderFeeTracker(); });
 
         window.addEventListener('DOMContentLoaded', () => {
             if(!currentLoggedInUser) {
@@ -306,6 +404,20 @@
                 updateUserBadge();
             }
         });
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-3 py-1.5 rounded-xl text-gray-400 hover:text-white transition flex items-center gap-1.5";
+            });
+            document.getElementById(tabId).classList.remove('hidden');
+            let activeBtnId = 'btn' + tabId.charAt(0).toUpperCase() + tabId.slice(1);
+            let activeBtn = document.getElementById(activeBtnId);
+            if(activeBtn) {
+                activeBtn.className = "tab-btn px-3 py-1.5 rounded-xl text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 transition flex items-center gap-1.5";
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         function getPlayerPin(playerObj) {
             if(playerObj && playerObj.pin) return playerObj.pin;
@@ -349,6 +461,8 @@
                 document.getElementById('loginModal').classList.add('hidden');
                 document.getElementById('loginPlayerPin').value = '';
                 updateUserBadge();
+                renderApp();
+                renderFeeTracker();
                 alert(`স্বাগতম, ${currentLoggedInUser}! সফলভাবে লগইন হয়েছে।`);
             } else {
                 alert("ভুল পিন (PIN)! সঠিক গোপন পিন দিন।");
@@ -362,6 +476,8 @@
             localStorage.setItem('ffc_current_player_id', "");
             document.getElementById('loginModal').classList.add('hidden');
             updateUserBadge();
+            renderApp();
+            renderFeeTracker();
         }
 
         function updateUserBadge() {
@@ -382,6 +498,7 @@
                 document.getElementById('adminBtnText').innerText = "অ্যাডমিন";
                 document.getElementById('lockIcon').className = "fa-solid fa-lock mr-1";
                 renderApp();
+                renderFeeTracker();
                 return;
             }
 
@@ -392,9 +509,89 @@
                 document.getElementById('adminBtnText').innerText = "লগআউট";
                 document.getElementById('lockIcon').className = "fa-solid fa-unlock mr-1 text-emerald-400";
                 renderApp();
+                renderFeeTracker();
             } else if (pin !== null) {
                 alert("ভুল পাসওয়ার্ড!");
             }
+        }
+
+        // Attendance RSVP functions
+        window.toggleAttendance = function(isAttending) {
+            if(!currentLoggedInPlayerId || currentLoggedInUser === "Visitor (ভিজিটর)") {
+                alert("উপস্থিতি নিশ্চিত করতে আপনার নিজস্ব ভেরিফাইড প্লেয়ার আইডি দিয়ে লগইন করুন!");
+                openLoginModal();
+                return;
+            }
+            dbRefAttendance.child(currentLoggedInPlayerId).set({
+                name: currentLoggedInUser,
+                status: isAttending ? "Playing" : "Not Playing",
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+        }
+
+        function renderAttendanceList() {
+            const container = document.getElementById('attendingListContainer');
+            const countBadge = document.getElementById('attendingCount');
+            let keys = Object.keys(attendanceData);
+            let playingList = keys.filter(k => attendanceData[k].status === "Playing").map(k => attendanceData[k].name);
+
+            countBadge.innerText = `${playingList.length} জন নিশ্চিত`;
+            container.innerHTML = playingList.length ? '' : '<p class="text-[11px] text-gray-500 italic">এখনো কেউ কনফার্ম করেনি। আপনি খেললে ওপরের বাটনে ক্লিক করুন!</p>';
+
+            playingList.forEach(name => {
+                container.innerHTML += `
+                    <span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 px-2.5 py-1 rounded-xl text-[11px] font-semibold flex items-center gap-1">
+                        <i class="fa-solid fa-check text-[10px]"></i> ${name}
+                    </span>
+                `;
+            });
+        }
+
+        // Turf Fee Tracker functions
+        window.toggleFeeStatus = function(playerId) {
+            if(!isAdminLoggedIn) return;
+            let currentStatus = feesData[playerId] || "Due";
+            let newStatus = currentStatus === "Paid" ? "Due" : "Paid";
+            dbRefFees.child(playerId).set(newStatus);
+        }
+
+        function renderFeeTracker() {
+            const tbody = document.getElementById('feeTrackerRows');
+            const actionHeader = document.getElementById('feeActionHeader');
+            let playerKeys = Object.keys(playersData);
+
+            if(isAdminLoggedIn) {
+                actionHeader.classList.remove('hidden');
+            } else {
+                actionHeader.classList.add('hidden');
+            }
+
+            tbody.innerHTML = playerKeys.length ? '' : '<tr><td colspan="3" class="text-center py-4 text-gray-500">প্লেয়ার ডাটা পাওয়া যায়নি</td></tr>';
+
+            playerKeys.forEach(k => {
+                let p = playersData[k];
+                let status = feesData[k] || "Due";
+                let statusBadge = status === "Paid" 
+                    ? '<span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px] font-bold"><i class="fa-solid fa-check mr-1"></i> পেইড (Paid)</span>'
+                    : '<span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[11px] font-bold"><i class="fa-solid fa-clock mr-1"></i> বাকি (Due)</span>';
+
+                let actionTD = isAdminLoggedIn ? `
+                    <td class="py-2 px-3 text-right">
+                        <button onclick="toggleFeeStatus('${k}')" class="bg-gray-800 hover:bg-gray-700 text-cyan-300 px-2.5 py-1 rounded text-[10px] border border-gray-700 font-bold transition">স্ট্যাটাস বদলান</button>
+                    </td>
+                ` : '';
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-950/40">
+                        <td class="py-2 px-3 font-bold text-white flex items-center gap-2">
+                            <img src="${p.photo}" class="w-5 h-5 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=000&name=${encodeURIComponent(p.name)}'">
+                            ${p.name}
+                        </td>
+                        <td class="py-2 px-3 text-center">${statusBadge}</td>
+                        ${actionTD}
+                    </tr>
+                `;
+            });
         }
 
         document.getElementById('updateNoticeForm').addEventListener('submit', function(e) {
@@ -437,6 +634,7 @@
             if(date && title && score) {
                 dbRefMatches.push({ date, title, teamA, teamB, score, scorers });
                 document.getElementById('addMatchForm').reset();
+                alert("ম্যাচ রেকর্ড সফলভাবে সেভ হয়েছে!");
             }
         });
 
@@ -506,7 +704,6 @@
             document.getElementById('modalMotm').innerText = p.motm || 0;
             document.getElementById('modalPhoto').src = p.photo;
 
-            // Show PIN change box only if current logged-in user owns this profile
             const pinChangeBox = document.getElementById('pinChangeContainer');
             if(currentLoggedInPlayerId === id) {
                 pinChangeBox.classList.remove('hidden');
@@ -606,7 +803,7 @@
         function renderChatMessages(chatObj) {
             const container = document.getElementById('chatMessagesContainer');
             let keys = Object.keys(chatObj);
-            container.innerHTML = keys.length ? '' : '<p class="text-gray-500 text-center py-6 text-xs">এখনো কোনো চ্যাট মেসেজ নেই। আড্ডা শুরু করুন!</p>';
+            container.innerHTML = keys.length ? '' : '<p class="text-gray-500 text-center py-10 text-xs">এখনো কোনো চ্যাট মেসেজ নেই। আড্ডা শুরু করুন!</p>';
 
             keys.forEach(k => {
                 let c = chatObj[k];
@@ -628,12 +825,23 @@
             const tbody = document.getElementById('leaderboardRows');
             const matchGrid = document.getElementById('matchesHistoryGrid');
 
+            const searchQuery = (document.getElementById('playerSearchInput')?.value || "").toLowerCase();
+            const posFilter = document.getElementById('positionFilterSelect')?.value || "";
+
             let playerKeys = Object.keys(playersData);
             let playerList = playerKeys.map(k => ({ id: k, ...playersData[k] }));
+
+            // Apply Search and Position Filter
+            playerList = playerList.filter(p => {
+                let matchesSearch = p.name.toLowerCase().includes(searchQuery);
+                let matchesPos = posFilter === "" || p.pos === posFilter;
+                return matchesSearch && matchesPos;
+            });
+
             let sortedList = [...playerList].sort((a, b) => (Number(b.goals) || 0) - (Number(a.goals) || 0));
 
             // Render Player Cards
-            grid.innerHTML = playerList.length ? '' : '<p class="text-xs text-gray-500 col-span-full text-center py-4">কোনো প্লেয়ার যোগ করা হয়নি।</p>';
+            grid.innerHTML = playerList.length ? '' : '<p class="text-xs text-gray-500 col-span-full text-center py-4">কোনো প্লেয়ার খুঁজে পাওয়া যায়নি।</p>';
             playerList.forEach(p => {
                 let m = Number(p.matchesPlayed) || 0;
                 let g = Number(p.goals) || 0;

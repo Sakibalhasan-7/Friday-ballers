@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friday Football Club - Ultimate</title>
+    <title>Friday Football Club - Secure Ultimate</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -15,26 +15,26 @@
 </head>
 <body class="min-h-screen pb-24">
 
-    <!-- Player Login Modal -->
-    <div id="loginModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex items-center justify-center p-4">
+    <!-- Player Secure Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-gray-900 border border-gray-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-4">
             <div class="text-center space-y-1">
                 <span class="bg-emerald-500 text-black px-3 py-1 rounded-xl font-black text-sm">FFC</span>
-                <h2 class="text-lg font-bold text-white mt-2">ফুটবল ক্লাবে স্বাগতম!</h2>
-                <p class="text-xs text-gray-400">আপনার নাম সিলেক্ট করে বা আইডি দিয়ে প্রবেশ করুন</p>
+                <h2 class="text-lg font-bold text-white mt-2">প্লেয়ার ভেরিফিকেশন</h2>
+                <p class="text-xs text-gray-400">আপনার নিজস্ব আইডি ও গোপন পিন দিয়ে প্রবেশ করুন</p>
             </div>
             <div class="space-y-3">
                 <div>
-                    <label class="block text-xs text-gray-400 mb-1">আপনার নাম বা প্লেয়ার সিলেক্ট করুন:</label>
+                    <label class="block text-xs text-gray-400 mb-1">আপনার নাম সিলেক্ট করুন:</label>
                     <select id="loginPlayerSelect" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white">
                         <option value="">-- প্লেয়ার সিলেক্ট করুন --</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-400 mb-1">অথবা নতুন নাম লিখুন:</label>
-                    <input type="text" id="loginCustomName" placeholder="আপনার পুরো নাম" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white">
+                    <label class="block text-xs text-gray-400 mb-1">গোপন পিন (PIN):</label>
+                    <input type="password" id="loginPlayerPin" placeholder="৪-সংখ্যার পিন দিন" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white" maxlength="6">
                 </div>
-                <button onclick="handlePlayerLogin()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2.5 rounded-xl text-xs transition">প্রবেশ করুন</button>
+                <button onclick="handleSecurePlayerLogin()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2.5 rounded-xl text-xs transition">লগইন করুন</button>
             </div>
         </div>
     </div>
@@ -51,7 +51,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="openLoginModal()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-gray-700">
-                    <i class="fa-solid fa-user-pen mr-1"></i> আইডি পরিবর্তন
+                    <i class="fa-solid fa-user-lock mr-1"></i> লগইন / পরিবর্তন
                 </button>
                 <button onclick="triggerAdmin()" id="adminNavBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-700">
                     <i class="fa-solid fa-lock mr-1" id="lockIcon"></i> <span id="adminBtnText">অ্যাডমিন</span>
@@ -92,9 +92,10 @@
 
             <!-- Add Player Form -->
             <form id="addPlayerForm" class="space-y-3">
-                <p class="text-xs font-bold text-gray-400">+ নতুন প্লেয়ার যোগ করুন</p>
+                <p class="text-xs font-bold text-gray-400">+ নতুন প্লেয়ার ও গোপন পিন যোগ করুন</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <input type="text" id="newPlayerName" placeholder="প্লেয়ারের নাম" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
+                    <input type="password" id="newPlayerPin" placeholder="গোপন পিন (e.g. 1234)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
                     <select id="newPlayerPos" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
                         <option value="Attacker">Attacker</option>
                         <option value="Midfielder">Midfielder</option>
@@ -102,8 +103,8 @@
                         <option value="Goalkeeper">Goalkeeper</option>
                     </select>
                     <input type="url" id="newPlayerPhoto" placeholder="ছবি URL (Direct Link)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
-                    <input type="text" id="newPlayerDesc" placeholder="প্লেয়ার বায়ো/ডেসক্রিপশন (Optional)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
-                    <button type="submit" class="sm:col-span-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2 rounded-xl text-xs">প্লেয়ার সেভ করুন</button>
+                    <input type="text" id="newPlayerDesc" placeholder="প্লেয়ার বায়ো/ডেসক্রিপশন (Optional)" class="sm:col-span-2 bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
+                    <button type="submit" class="sm:col-span-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2 rounded-xl text-xs">প্লেয়ার ও পিন সেভ করুন</button>
                 </div>
             </form>
 
@@ -213,7 +214,7 @@
                     <span id="modalAssists" class="text-sm font-bold text-amber-400">0</span>
                 </div>
                 <div>
-                    <span class="block text-[10px] text-gray-400 uppercase">ম্যানে অব দ্য ম্যাচ</span>
+                    <span class="block text-[10px] text-gray-400 uppercase">ম্যান অব দ্য ম্যাচ</span>
                     <span id="modalMotm" class="text-sm font-bold text-purple-400">0</span>
                 </div>
             </div>
@@ -266,34 +267,48 @@
         function openLoginModal() {
             document.getElementById('loginModal').classList.remove('hidden');
             let select = document.getElementById('loginPlayerSelect');
-            select.innerHTML = '<option value="">-- প্লেয়ার লিস্ট থেকে সিলেক্ট করুন --</option>';
+            select.innerHTML = '<option value="">-- আপনার নাম সিলেক্ট করুন --</option>';
             Object.keys(playersData).forEach(k => {
-                select.innerHTML += `<option value="${playersData[k].name}">${playersData[k].name}</option>`;
+                select.innerHTML += `<option value="${k}">${playersData[k].name}</option>`;
             });
         }
 
-        function handlePlayerLogin() {
-            let selected = document.getElementById('loginPlayerSelect').value;
-            let custom = document.getElementById('loginCustomName').value.trim();
-            let finalName = custom || selected;
+        function handleSecurePlayerLogin() {
+            let playerId = document.getElementById('loginPlayerSelect').value;
+            let pinInput = document.getElementById('loginPlayerPin').value.trim();
 
-            if(!finalName) {
-                alert("দয়া করে আপনার নাম বা প্লেয়ার সিলেক্ট করুন!");
+            if(!playerId) {
+                alert("দয়া করে লিস্ট থেকে আপনার নাম সিলেক্ট করুন!");
                 return;
             }
 
-            currentLoggedInUser = finalName;
-            localStorage.setItem('ffc_current_user', currentLoggedInUser);
-            document.getElementById('loginModal').classList.add('hidden');
-            updateUserBadge();
+            let player = playersData[playerId];
+            if(!player) {
+                alert("প্লেয়ার খুঁজে পাওয়া যায়নি!");
+                return;
+            }
+
+            // Check Pin (Default to 1234 if old players don't have a pin set yet)
+            let correctPin = player.pin || "1234";
+
+            if(pinInput === correctPin) {
+                currentLoggedInUser = player.name;
+                localStorage.setItem('ffc_current_user', currentLoggedInUser);
+                document.getElementById('loginModal').classList.add('hidden');
+                document.getElementById('loginPlayerPin').value = '';
+                updateUserBadge();
+                alert(`স্বাগতম, ${currentLoggedInUser}! সফলভাবে লগইন হয়েছে।`);
+            } else {
+                alert("ভুল পিন (PIN)! সঠিক পিন দিয়ে প্রবেশ করুন।");
+            }
         }
 
         function updateUserBadge() {
             const badge = document.getElementById('userBadge');
             if(currentLoggedInUser) {
-                badge.innerText = `লগইন আছেন: ${currentLoggedInUser}`;
+                badge.innerText = `আইডি: ${currentLoggedInUser}`;
             } else {
-                badge.innerText = `অতিথি মোড`;
+                badge.innerText = `লগইন করা নেই`;
             }
         }
 
@@ -332,14 +347,18 @@
         document.getElementById('addPlayerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const name = document.getElementById('newPlayerName').value.trim();
+            const pin = document.getElementById('newPlayerPin').value.trim();
             const pos = document.getElementById('newPlayerPos').value;
             const photoInput = document.getElementById('newPlayerPhoto').value.trim();
             const desc = document.getElementById('newPlayerDesc').value.trim();
             const photo = photoInput || `https://ui-avatars.com/api/?background=10b981&color=000&name=` + encodeURIComponent(name);
 
-            if(name) {
-                dbRefPlayers.push({ name, pos, matchesPlayed: 0, goals: 0, assists: 0, motm: 0, photo, desc: desc || "Friday Football Club Player" });
+            if(name && pin) {
+                dbRefPlayers.push({ name, pin, pos, matchesPlayed: 0, goals: 0, assists: 0, motm: 0, photo, desc: desc || "Friday Football Club Player" });
                 document.getElementById('addPlayerForm').reset();
+                alert("নতুন প্লেয়ার ও পিন সফলভাবে সেভ হয়েছে!");
+            } else {
+                alert("দয়া করে নাম এবং পিন উভয়ই পূরণ করুন!");
             }
         });
 

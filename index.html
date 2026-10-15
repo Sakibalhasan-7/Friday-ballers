@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friday Football Club - Ultimate</title>
+    <title>Friday Football Club - Ultimate Secure</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -31,7 +31,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-400 mb-1">গোপন পিন (PIN):</label>
+                    <label class="block text-xs text-gray-400 mb-1">গোপন পিন (PIN): <span class="text-[10px] text-amber-400">(পুরনোদের পিন: 1234)</span></label>
                     <input type="password" id="loginPlayerPin" placeholder="৪-সংখ্যার পিন দিন" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white">
                 </div>
                 <button onclick="handleSecurePlayerLogin()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2.5 rounded-xl text-xs transition">লগইন করুন</button>
@@ -308,7 +308,7 @@
                 updateUserBadge();
                 alert(`স্বাগতম, ${currentLoggedInUser}! সফলভাবে লগইন হয়েছে।`);
             } else {
-                alert("ভুল পিন (PIN)! সঠিক পিন দিয়ে প্রবেশ করুন।");
+                alert("ভুল পিন (PIN)! পুরনো প্লেয়ার হলে পিন দিন: 1234");
             }
         }
 
@@ -470,14 +470,20 @@
         function populateSelectOptions() {
             const p1 = document.getElementById('h2hPlayer1');
             const p2 = document.getElementById('h2hPlayer2');
+            let selectModal = document.getElementById('loginPlayerSelect');
+            
             let options = '<option value="">-- প্লেয়ার বেছে নিন --</option>';
+            let modalOptions = '<option value="">-- প্লেয়ার সিলেক্ট করুন --</option>';
 
             Object.keys(playersData).forEach(k => {
-                options += `<option value="${k}">${playersData[k].name}</option>`;
+                let pName = playersData[k].name;
+                options += `<option value="${k}">${pName}</option>`;
+                modalOptions += `<option value="${k}">${pName}</option>`;
             });
 
             p1.innerHTML = options;
             p2.innerHTML = options;
+            selectModal.innerHTML = modalOptions;
 
             let keys = Object.keys(playersData);
             if(keys.length >= 2) {

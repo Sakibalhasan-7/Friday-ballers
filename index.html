@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friday Football Club - Ultimate Secure</title>
+    <title>Friday Football Club - Ultimate Clean & Secure</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -21,7 +21,7 @@
             <div class="text-center space-y-1">
                 <span class="bg-emerald-500 text-black px-3 py-1 rounded-xl font-black text-sm">FFC</span>
                 <h2 class="text-lg font-bold text-white mt-2">ফুটবল ক্লাবে স্বাগতম</h2>
-                <p class="text-xs text-gray-400">আপনার আইডি দিয়ে লগইন করুন অথবা ভিজিটর হিসেবে দেখুন</p>
+                <p class="text-xs text-gray-400">আপনার আইডি সিলেক্ট করুন এবং গোপন পিন দিন</p>
             </div>
             <div class="space-y-3">
                 <div>
@@ -31,7 +31,7 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-400 mb-1">গোপন পিন (PIN): <span class="text-[10px] text-amber-400">(পুরনোদের পিন: 1234)</span></label>
+                    <label class="block text-xs text-gray-400 mb-1">গোপন পিন (PIN):</label>
                     <input type="password" id="loginPlayerPin" placeholder="৪-সংখ্যার পিন দিন" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white">
                 </div>
                 <button onclick="handleSecurePlayerLogin()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2.5 rounded-xl text-xs transition">লগইন করুন</button>
@@ -43,7 +43,7 @@
                 </div>
 
                 <button onclick="continueAsVisitor()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2.5 rounded-xl text-xs border border-gray-700 transition">
-                    <i class="fa-solid fa-eye mr-1"></i> শুধু ভিজিটর হিসেবে দেখুন (কমেন্ট বন্ধ থাকবে)
+                    <i class="fa-solid fa-eye mr-1"></i> শুধু ভিজিটর হিসেবে দেখুন
                 </button>
             </div>
         </div>
@@ -61,7 +61,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="openLoginModal()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-gray-700">
-                    <i class="fa-solid fa-user-lock mr-1"></i> লগইন
+                    <i class="fa-solid fa-user-lock mr-1"></i> আইডি পরিবর্তন
                 </button>
                 <button onclick="triggerAdmin()" id="adminNavBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-700">
                     <i class="fa-solid fa-lock mr-1" id="lockIcon"></i> <span id="adminBtnText">অ্যাডমিন</span>
@@ -105,7 +105,7 @@
                 <p class="text-xs font-bold text-gray-400">+ নতুন প্লেয়ার ও গোপন পিন (PIN) যোগ করুন</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <input type="text" id="newPlayerName" placeholder="প্লেয়ারের নাম" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
-                    <input type="password" id="newPlayerPin" placeholder="গোপন পিন (যেমন: 1234)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
+                    <input type="password" id="newPlayerPin" placeholder="গোপন পিন (যেমন: 9876)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
                     <select id="newPlayerPos" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
                         <option value="Attacker">Attacker</option>
                         <option value="Midfielder">Midfielder</option>
@@ -228,6 +228,16 @@
                     <span id="modalMotm" class="text-sm font-bold text-purple-400">0</span>
                 </div>
             </div>
+
+            <!-- Self PIN Change Box for Logged In Player -->
+            <div id="pinChangeContainer" class="hidden pt-3 border-t border-gray-800 space-y-2">
+                <p class="text-[11px] font-bold text-emerald-400"><i class="fa-solid fa-key mr-1"></i> আপনার গোপন পিন পরিবর্তন করুন</p>
+                <div class="space-y-1.5">
+                    <input type="password" id="oldPinInput" placeholder="পুরনো পিন" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-2.5 py-1.5 text-[11px] text-white">
+                    <input type="password" id="newPinInput" placeholder="নতুন পিন (৪ ডিজিট)" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-2.5 py-1.5 text-[11px] text-white">
+                    <button onclick="changeMyPlayerPin()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-1.5 rounded-lg text-[11px] transition">পিন আপডেট করুন</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -249,11 +259,34 @@
         const dbRefChat = firebase.database().ref('ffc_chat_v6');
         const dbRefComments = firebase.database().ref('ffc_comments_v6');
 
+        // Preset Unique PIN Mapping for Squad
+        const playerPinMap = {
+            "Sakib Al hasan": "7842",
+            "Abu wali siddique": "3145",
+            "Jobayer hosen": "6982",
+            "Sayed hosen enjamam": "4521",
+            "Sihamur rahman": "8713",
+            "M Adil abedin": "2369",
+            "Sadman alif": "3915",
+            "Maqsudul Alam nirob": "5821",
+            "Tasbiul hasan": "6493",
+            "Ashraful Hoda Tawza": "1947",
+            "Rihan": "5280",
+            "Aousaf": "9134",
+            "Yousuf": "7361",
+            "Indronill": "4826",
+            "Kownish ghosh": "8215",
+            "Ovishek nath sokanto": "3691",
+            "Momin Al Isalm Labib": "6542",
+            "Oshan": "1478"
+        };
+
         let isAdminLoggedIn = false;
         let playersData = {};
         let matchesData = {};
         let commentsData = {};
         let currentLoggedInUser = localStorage.getItem('ffc_current_user') || "";
+        let currentLoggedInPlayerId = localStorage.getItem('ffc_current_player_id') || "";
 
         dbRefPlayers.on('value', snapshot => { playersData = snapshot.val() || {}; renderApp(); populateSelectOptions(); });
         dbRefMatches.on('value', snapshot => { matchesData = snapshot.val() || {}; renderApp(); });
@@ -273,6 +306,14 @@
                 updateUserBadge();
             }
         });
+
+        function getPlayerPin(playerObj) {
+            if(playerObj && playerObj.pin) return playerObj.pin;
+            if(playerObj && playerObj.name && playerPinMap[playerObj.name]) {
+                return playerPinMap[playerObj.name];
+            }
+            return "1234";
+        }
 
         function openLoginModal() {
             document.getElementById('loginModal').classList.remove('hidden');
@@ -298,23 +339,27 @@
                 return;
             }
 
-            let correctPin = player.pin || "1234";
+            let correctPin = getPlayerPin(player);
 
             if(pinInput === correctPin) {
                 currentLoggedInUser = player.name;
+                currentLoggedInPlayerId = playerId;
                 localStorage.setItem('ffc_current_user', currentLoggedInUser);
+                localStorage.setItem('ffc_current_player_id', currentLoggedInPlayerId);
                 document.getElementById('loginModal').classList.add('hidden');
                 document.getElementById('loginPlayerPin').value = '';
                 updateUserBadge();
                 alert(`স্বাগতম, ${currentLoggedInUser}! সফলভাবে লগইন হয়েছে।`);
             } else {
-                alert("ভুল পিন (PIN)! পুরনো প্লেয়ার হলে পিন দিন: 1234");
+                alert("ভুল পিন (PIN)! সঠিক গোপন পিন দিন।");
             }
         }
 
         function continueAsVisitor() {
             currentLoggedInUser = "Visitor (ভিজিটর)";
+            currentLoggedInPlayerId = "";
             localStorage.setItem('ffc_current_user', currentLoggedInUser);
+            localStorage.setItem('ffc_current_player_id', "");
             document.getElementById('loginModal').classList.add('hidden');
             updateUserBadge();
         }
@@ -460,11 +505,50 @@
             document.getElementById('modalAssists').innerText = p.assists || 0;
             document.getElementById('modalMotm').innerText = p.motm || 0;
             document.getElementById('modalPhoto').src = p.photo;
+
+            // Show PIN change box only if current logged-in user owns this profile
+            const pinChangeBox = document.getElementById('pinChangeContainer');
+            if(currentLoggedInPlayerId === id) {
+                pinChangeBox.classList.remove('hidden');
+                document.getElementById('oldPinInput').value = '';
+                document.getElementById('newPinInput').value = '';
+            } else {
+                pinChangeBox.classList.add('hidden');
+            }
+
             document.getElementById('profileModal').classList.remove('hidden');
         }
 
         window.closeProfileModal = function() {
             document.getElementById('profileModal').classList.add('hidden');
+        }
+
+        window.changeMyPlayerPin = function() {
+            if(!currentLoggedInPlayerId || !playersData[currentLoggedInPlayerId]) {
+                alert("আপনি কোনো ভেরিফাইড প্লেয়ার আইডিতে লগইন করা নেই!");
+                return;
+            }
+
+            let oldInput = document.getElementById('oldPinInput').value.trim();
+            let newInput = document.getElementById('newPinInput').value.trim();
+            let p = playersData[currentLoggedInPlayerId];
+
+            let activePin = getPlayerPin(p);
+
+            if(oldInput !== activePin) {
+                alert("পুরাতন পিন ভুল হয়েছে!");
+                return;
+            }
+
+            if(!newInput || newInput.length < 4) {
+                alert("নতুন পিন কমপক্ষে ৪ ডিজিটের হতে হবে!");
+                return;
+            }
+
+            dbRefPlayers.child(currentLoggedInPlayerId).update({ pin: newInput });
+            alert("আপনার গোপন পিন সফলভাবে পরিবর্তন করা হয়েছে!");
+            document.getElementById('oldPinInput').value = '';
+            document.getElementById('newPinInput').value = '';
         }
 
         function populateSelectOptions() {

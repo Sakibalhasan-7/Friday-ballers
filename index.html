@@ -1,48 +1,53 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friday Football Club - Tabbed & Pro Ultimate</title>
+    <title>Friday Football Club - Professional Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&display=swap');
-        body { font-family: 'Hind Siliguri', sans-serif; background-color: #030712; color: #f3f4f6; }
+        body { font-family: 'Hind Siliguri', sans-serif; }
     </style>
 </head>
-<body class="min-h-screen pb-28">
+<body class="min-h-screen pb-24 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200">
 
     <!-- Player Secure Login / Visitor Modal -->
     <div id="loginModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-gray-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-4">
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-4">
             <div class="text-center space-y-1">
                 <span class="bg-emerald-500 text-black px-3 py-1 rounded-xl font-black text-sm">FFC</span>
-                <h2 class="text-lg font-bold text-white mt-2">ফুটবল ক্লাবে স্বাগতম</h2>
-                <p class="text-xs text-gray-400">আপনার আইডি সিলেক্ট করুন এবং গোপন পিন দিন</p>
+                <h2 class="text-lg font-bold mt-2">ফুটবল ক্লাবে স্বাগতম</h2>
+                <p class="text-xs text-gray-500 dark:text-gray-400">আপনার আইডি সিলেক্ট করুন এবং গোপন পিন দিন</p>
             </div>
             <div class="space-y-3">
                 <div>
-                    <label class="block text-xs text-gray-400 mb-1">আপনার নাম সিলেক্ট করুন:</label>
-                    <select id="loginPlayerSelect" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white">
+                    <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">আপনার নাম সিলেক্ট করুন:</label>
+                    <select id="loginPlayerSelect" class="w-full bg-gray-100 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2.5 text-xs">
                         <option value="">-- প্লেয়ার সিলেক্ট করুন --</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-400 mb-1">গোপন পিন (PIN):</label>
-                    <input type="password" id="loginPlayerPin" placeholder="৪-সংখ্যার পিন দিন" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white">
+                    <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">গোপন পিন (PIN):</label>
+                    <input type="password" id="loginPlayerPin" placeholder="৪-সংখ্যার পিন দিন" class="w-full bg-gray-100 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2.5 text-xs">
                 </div>
                 <button onclick="handleSecurePlayerLogin()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2.5 rounded-xl text-xs transition">লগইন করুন</button>
                 
                 <div class="relative flex py-1 items-center">
-                    <div class="flex-grow border-t border-gray-800"></div>
-                    <span class="flex-shrink mx-2 text-[10px] text-gray-500 uppercase">অথবা</span>
-                    <div class="flex-grow border-t border-gray-800"></div>
+                    <div class="flex-grow border-t border-gray-300 dark:border-gray-800"></div>
+                    <span class="flex-shrink mx-2 text-[10px] text-gray-400 uppercase">অথবা</span>
+                    <div class="flex-grow border-t border-gray-300 dark:border-gray-800"></div>
                 </div>
 
-                <button onclick="continueAsVisitor()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2.5 rounded-xl text-xs border border-gray-700 transition">
+                <button onclick="continueAsVisitor()" class="w-full bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 font-semibold py-2.5 rounded-xl text-xs border border-gray-300 dark:border-gray-700 transition">
                     <i class="fa-solid fa-eye mr-1"></i> শুধু ভিজিটর হিসেবে দেখুন
                 </button>
             </div>
@@ -50,283 +55,212 @@
     </div>
 
     <!-- Navbar -->
-    <header class="bg-gray-900 border-b border-gray-800 sticky top-0 z-40 shadow-lg">
+    <header class="bg-white/90 dark:bg-gray-900/90 backdrop-blur border-b border-gray-200 dark:border-gray-800 sticky top-0 z-40 shadow-sm">
         <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2">
                 <span class="bg-emerald-500 text-black px-2.5 py-1 rounded-lg font-black text-sm">FFC</span>
                 <div>
-                    <h1 class="text-xs font-bold text-white">Friday Football Club</h1>
-                    <span id="userBadge" class="text-[10px] text-emerald-400 font-semibold"></span>
+                    <h1 class="text-xs font-bold">Friday Football Club</h1>
+                    <span id="userBadge" class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold"></span>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <button onclick="openLoginModal()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-gray-700">
+                <button onclick="toggleTheme()" class="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 p-2 rounded-lg text-xs border border-gray-300 dark:border-gray-700 transition" title="টিন পরিবর্তন করুন">
+                    <i id="themeIcon" class="fa-solid fa-moon"></i>
+                </button>
+                <button onclick="openLoginModal()" class="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold border border-gray-300 dark:border-gray-700">
                     <i class="fa-solid fa-user-lock mr-1"></i> আইডি পরিবর্তন
                 </button>
-                <button onclick="triggerAdmin()" id="adminNavBtn" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-700">
+                <button onclick="triggerAdmin()" id="adminNavBtn" class="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 px-3 py-1.5 rounded-lg text-xs font-semibold border border-gray-300 dark:border-gray-700">
                     <i class="fa-solid fa-lock mr-1" id="lockIcon"></i> <span id="adminBtnText">অ্যাডমিন</span>
                 </button>
             </div>
         </div>
     </header>
 
-    <!-- Bottom / Main Navigation Tabs -->
-    <nav class="bg-gray-900/90 backdrop-blur border-b border-gray-800 sticky top-[53px] z-30 shadow">
-        <div class="max-w-4xl mx-auto px-2 flex justify-around py-2 text-xs font-bold">
-            <button onclick="switchTab('homeTab')" id="btnHomeTab" class="tab-btn px-3 py-1.5 rounded-xl text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 transition flex items-center gap-1.5">
-                <i class="fa-solid fa-house"></i> হোম
-            </button>
-            <button onclick="switchTab('squadTab')" id="btnSquadTab" class="tab-btn px-3 py-1.5 rounded-xl text-gray-400 hover:text-white transition flex items-center gap-1.5">
-                <i class="fa-solid fa-users"></i> স্কোয়াড ও লিডারবোর্ড
-            </button>
-            <button onclick="switchTab('matchesTab')" id="btnMatchesTab" class="tab-btn px-3 py-1.5 rounded-xl text-gray-400 hover:text-white transition flex items-center gap-1.5">
-                <i class="fa-solid fa-calendar-days"></i> ম্যাচ ও উপস্থিতি
-            </button>
-            <button onclick="switchTab('chatTab')" id="btnChatTab" class="tab-btn px-3 py-1.5 rounded-xl text-gray-400 hover:text-white transition flex items-center gap-1.5">
-                <i class="fa-solid fa-comments"></i> চ্যাট ওয়াল
-            </button>
-        </div>
-    </nav>
-
     <main class="max-w-4xl mx-auto px-4 py-5 space-y-6">
 
-        <!-- Admin Control Box (Accessible from anywhere if admin) -->
-        <div id="adminPanel" class="hidden bg-gray-900 border-2 border-emerald-500/50 rounded-2xl p-4 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-                <h3 class="text-sm font-bold text-emerald-400"><i class="fa-solid fa-shield-halved mr-1"></i> অ্যাডমিন কন্ট্রোল প্যানেল</h3>
-                <span class="text-xs bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded">সক্রিয়</span>
+        <!-- Live Notice Board (Always at the very top) -->
+        <div id="noticeBoardBox" class="bg-gradient-to-r from-emerald-900/20 via-emerald-950/10 to-transparent border border-emerald-500/40 rounded-2xl p-4 shadow-md flex items-center gap-3">
+            <div class="bg-emerald-500 text-black px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 shrink-0 animate-pulse">
+                <i class="fa-solid fa-bullhorn"></i> নোটিশ
+            </div>
+            <div class="overflow-hidden whitespace-nowrap w-full">
+                <p id="noticeTextContent" class="text-xs text-emerald-700 dark:text-emerald-300 font-bold">আগামী শুক্রবার বিকেল ৪টায় ৫v৫ রোমাঞ্চকর ম্যাচ অনুষ্ঠিত হবে। সবাই সময়মতো উপস্থিত থাকবেন!</p>
+            </div>
+        </div>
+
+        <!-- Admin Control Box -->
+        <div id="adminPanel" class="hidden bg-white dark:bg-gray-900 border-2 border-emerald-500/50 rounded-2xl p-4 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                <h3 class="text-sm font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-shield-halved mr-1"></i> অ্যাডমিন কন্ট্রোল প্যানেল</h3>
+                <span class="text-xs bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 px-2 py-0.5 rounded">সক্রিয়</span>
             </div>
 
             <!-- Notice Update Form -->
             <form id="updateNoticeForm" class="space-y-2">
-                <p class="text-xs font-bold text-cyan-400">📢 নোটিশ বোর্ড আপডেট করুন</p>
+                <p class="text-xs font-bold text-cyan-600 dark:text-cyan-400">📢 নোটিশ বোর্ড আপডেট করুন</p>
                 <div class="flex gap-2">
-                    <input type="text" id="adminNoticeInput" placeholder="নতুন নোটিশ লিখুন..." class="flex-1 bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
+                    <input type="text" id="adminNoticeInput" placeholder="নতুন নোটিশ লিখুন..." class="flex-1 bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required>
                     <button type="submit" class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-4 py-2 rounded-xl text-xs">প্রকাশ করুন</button>
                 </div>
             </form>
 
-            <hr class="border-gray-800">
+            <hr class="border-gray-200 dark:border-gray-800">
 
             <!-- Add Player Form -->
             <form id="addPlayerForm" class="space-y-3">
-                <p class="text-xs font-bold text-gray-400">+ নতুন প্লেয়ার ও গোপন পিন (PIN) যোগ করুন</p>
+                <p class="text-xs font-bold text-gray-500 dark:text-gray-400">+ নতুন প্লেয়ার ও গোপন পিন (PIN) যোগ করুন</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <input type="text" id="newPlayerName" placeholder="প্লেয়ারের নাম" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
-                    <input type="password" id="newPlayerPin" placeholder="গোপন পিন (যেমন: 9876)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
-                    <select id="newPlayerPos" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
+                    <input type="text" id="newPlayerName" placeholder="প্লেয়ারের নাম" class="bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required>
+                    <input type="password" id="newPlayerPin" placeholder="গোপন পিন (যেমন: 9876)" class="bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required>
+                    <select id="newPlayerPos" class="bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs">
                         <option value="Attacker">Attacker</option>
                         <option value="Midfielder">Midfielder</option>
                         <option value="Defender">Defender</option>
                         <option value="Goalkeeper">Goalkeeper</option>
                     </select>
-                    <input type="url" id="newPlayerPhoto" placeholder="ছবি URL (Direct Link)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
-                    <input type="text" id="newPlayerDesc" placeholder="প্লেয়ার বায়ো/ডেসক্রিপশন (Optional)" class="sm:col-span-2 bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
+                    <input type="url" id="newPlayerPhoto" placeholder="ছবি URL (Direct Link)" class="bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs">
+                    <input type="text" id="newPlayerDesc" placeholder="প্লেয়ার বায়ো/ডেসক্রিপশন (Optional)" class="sm:col-span-2 bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs">
                     <button type="submit" class="sm:col-span-2 bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2 rounded-xl text-xs">প্লেয়ার ও পিন সেভ করুন</button>
                 </div>
             </form>
 
-            <hr class="border-gray-800">
+            <hr class="border-gray-200 dark:border-gray-800">
 
             <!-- Add Match Result Form -->
             <form id="addMatchForm" class="space-y-3">
-                <p class="text-xs font-bold text-amber-400">+ নতুন ম্যাচ বিবরণী ও টিম রেকর্ড যোগ করুন</p>
+                <p class="text-xs font-bold text-amber-600 dark:text-amber-400">+ নতুন ম্যাচ বিবরণী ও টিম রেকর্ড যোগ করুন</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <input type="date" id="matchDate" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
-                    <input type="text" id="matchTitle" placeholder="ম্যাচ শিরোনাম (e.g. 5v5 Turf Battle)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
-                    <input type="text" id="teamA" placeholder="টিম A নাম ও প্লেয়ারসমূহ" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
-                    <input type="text" id="teamB" placeholder="টিম B নাম ও প্লেয়ারসমূহ" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
-                    <input type="text" id="matchScore" placeholder="স্কোর (e.g. 4 - 2)" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" required>
-                    <input type="text" id="matchScorers" placeholder="গোলদাতা ও অ্যাসিস্টদাতা" class="bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
+                    <input type="date" id="matchDate" class="bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required>
+                    <input type="text" id="matchTitle" placeholder="ম্যাচ শিরোনাম (e.g. 5v5 Turf Battle)" class="bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required>
+                    <input type="text" id="teamA" placeholder="টিম A নাম ও প্লেয়ারসমূহ" class="bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required>
+                    <input type="text" id="teamB" placeholder="টিম B নাম ও প্লেয়ারসমূহ" class="bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required>
+                    <input type="text" id="matchScore" placeholder="স্কোর (e.g. 4 - 2)" class="bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs" required>
+                    <input type="text" id="matchScorers" placeholder="গোলদাতা ও অ্যাসিস্টদাতা" class="bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs">
                     <button type="submit" class="sm:col-span-2 bg-amber-500 hover:bg-amber-400 text-black font-bold py-2 rounded-xl text-xs">ম্যাচ রিপোর্ট সেভ করুন</button>
                 </div>
             </form>
         </div>
 
-        <!-- TAB 1: HOME TAB -->
-        <div id="homeTab" class="tab-content space-y-6">
-            <!-- Live Notice Board -->
-            <div id="noticeBoardBox" class="bg-gradient-to-r from-emerald-950/80 via-gray-900 to-gray-900 border border-emerald-500/40 rounded-2xl p-3.5 shadow-lg flex items-center gap-3">
-                <div class="bg-emerald-500 text-black px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 shrink-0 animate-pulse">
-                    <i class="fa-solid fa-bullhorn"></i> নোটিশ
+        <!-- Leaderboard (Placed right under Notice Board as requested) -->
+        <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl">
+            <h2 class="text-sm font-bold text-amber-600 dark:text-amber-400 mb-3"><i class="fa-solid fa-trophy mr-1"></i> লাইভ লিডারবোর্ড</h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-gray-100 dark:bg-gray-950 text-gray-500 dark:text-gray-400 uppercase border-b border-gray-200 dark:border-gray-800">
+                        <tr>
+                            <th class="py-2.5 px-3">প্লেয়ার</th>
+                            <th class="py-2.5 px-3">পজিশন</th>
+                            <th class="py-2.5 px-3 text-center">ম্যাচ</th>
+                            <th class="py-2.5 px-3 text-center">গোল</th>
+                            <th class="py-2.5 px-3 text-center">অ্যাসিস্ট</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboardRows" class="divide-y divide-gray-200 dark:divide-gray-800">
+                        <tr><td colspan="5" class="text-center py-4 text-gray-400">ডাটা লোড হচ্ছে...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Squad Grid & Search -->
+        <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                <h2 class="text-sm font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-users mr-1"></i> স্কোয়াড ও প্লেয়ার প্রোফাইল</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div>
+                    <input type="text" id="playerSearchInput" oninput="renderApp()" placeholder="নাম দিয়ে প্লেয়ার খুঁজুন..." class="w-full bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs">
                 </div>
-                <div class="overflow-hidden whitespace-nowrap w-full">
-                    <p id="noticeTextContent" class="text-xs text-emerald-300 font-medium">আগামী শুক্রবার বিকেল ৪টায় ৫v৫ রোমাঞ্চকর ম্যাচ অনুষ্ঠিত হবে। সবাই সময়মতো উপস্থিত থাকবেন!</p>
+                <div>
+                    <select id="positionFilterSelect" onchange="renderApp()" class="w-full bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs">
+                        <option value="">সকল পজিশন</option>
+                        <option value="Attacker">Attacker</option>
+                        <option value="Midfielder">Midfielder</option>
+                        <option value="Defender">Defender</option>
+                        <option value="Goalkeeper">Goalkeeper</option>
+                    </select>
                 </div>
             </div>
+            <div id="playersCardGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2"></div>
+        </section>
 
-            <!-- Match Attendance / RSVP Section (Who is playing this Friday) -->
-            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
-                <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-                    <h2 class="text-sm font-bold text-emerald-400"><i class="fa-solid fa-clipboard-user mr-1"></i> আসন্ন ম্যাচে কে কে খেলবে? (RSVP)</h2>
-                    <span id="attendingCount" class="text-xs bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">০ জন নিশ্চিত</span>
+        <!-- Head-to-Head Comparison Section -->
+        <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+            <h2 class="text-sm font-bold text-purple-600 dark:text-purple-400"><i class="fa-solid fa-scale-balanced mr-1"></i> হেড-টু-হেড প্লেয়ার তুলনা</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[10px] text-gray-500 dark:text-gray-400 mb-1">প্রথম প্লেয়ার:</label>
+                    <select id="h2hPlayer1" onchange="renderH2HComparison()" class="w-full bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs"></select>
                 </div>
-                <p class="text-xs text-gray-400">আপনি কি আগামী শুক্রবার খেলছেন? নিচের বাটনে ক্লিক করে উপস্থিতি নিশ্চিত করুন:</p>
-                <div class="flex gap-2">
-                    <button onclick="toggleAttendance(true)" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2 rounded-xl text-xs transition">
-                        <i class="fa-solid fa-circle-check mr-1"></i> খেলব (Playing)
-                    </button>
-                    <button onclick="toggleAttendance(false)" class="flex-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-bold py-2 rounded-xl text-xs border border-rose-500/30 transition">
-                        <i class="fa-solid fa-circle-xmark mr-1"></i> খেলব না (Not Playing)
-                    </button>
-                </div>
-                <div id="attendingListContainer" class="flex flex-wrap gap-1.5 pt-2">
-                    <!-- Dynamic Attending Player Chips -->
-                </div>
-            </section>
-
-            <!-- Turf Match Fee / Due Tracker -->
-            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
-                <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-                    <h2 class="text-sm font-bold text-amber-400"><i class="fa-solid fa-wallet mr-1"></i> ম্যাচ ফি / চাঁদা ট্র্যাকার</h2>
-                    <span class="text-xs text-gray-400">টার্ফ ও বল ফান্ড</span>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs text-gray-300">
-                        <thead class="bg-gray-950 text-gray-400 uppercase border-b border-gray-800">
-                            <tr>
-                                <th class="py-2 px-3">প্লেয়ার</th>
-                                <th class="py-2 px-3 text-center">স্ট্যাটাস</th>
-                                <th id="feeActionHeader" class="py-2 px-3 text-right hidden">অ্যাকশন</th>
-                            </tr>
-                        </thead>
-                        <tbody id="feeTrackerRows" class="divide-y divide-gray-800">
-                            <!-- Dynamic Fee Rows -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-
-        <!-- TAB 2: SQUAD & LEADERBOARD TAB -->
-        <div id="squadTab" class="tab-content hidden space-y-6">
-            <!-- Search & Position Filter -->
-            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[10px] text-gray-400 mb-1">প্লেয়ার খুঁজুন:</label>
-                        <input type="text" id="playerSearchInput" oninput="renderApp()" placeholder="নাম দিয়ে সার্চ করুন..." class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-gray-400 mb-1">পজিশন ফিল্টার:</label>
-                        <select id="positionFilterSelect" onchange="renderApp()" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white">
-                            <option value="">সকল পজিশন</option>
-                            <option value="Attacker">Attacker</option>
-                            <option value="Midfielder">Midfielder</option>
-                            <option value="Defender">Defender</option>
-                            <option value="Goalkeeper">Goalkeeper</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block text-[10px] text-gray-500 dark:text-gray-400 mb-1">দ্বিতীয় প্লেয়ার:</label>
+                    <select id="h2hPlayer2" onchange="renderH2HComparison()" class="w-full bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs"></select>
                 </div>
             </div>
+            <div id="h2hResultBox" class="grid grid-cols-3 gap-2 bg-gray-50 dark:bg-gray-950 p-3 rounded-xl border border-gray-200 dark:border-gray-800 text-center text-xs">
+                <!-- Dynamic Comparison Result -->
+            </div>
+        </section>
 
-            <!-- Head-to-Head Comparison Section -->
-            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
-                <h2 class="text-sm font-bold text-purple-400"><i class="fa-solid fa-scale-balanced mr-1"></i> হেড-টু-হেড প্লেয়ার তুলনা</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                        <label class="block text-[10px] text-gray-400 mb-1">প্রথম প্লেয়ার:</label>
-                        <select id="h2hPlayer1" onchange="renderH2HComparison()" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white"></select>
-                    </div>
-                    <div>
-                        <label class="block text-[10px] text-gray-400 mb-1">দ্বিতীয় প্লেয়ার:</label>
-                        <select id="h2hPlayer2" onchange="renderH2HComparison()" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white"></select>
-                    </div>
-                </div>
-                <div id="h2hResultBox" class="grid grid-cols-3 gap-2 bg-gray-950 p-3 rounded-xl border border-gray-800 text-center text-xs">
-                    <!-- Dynamic Comparison Result -->
-                </div>
-            </section>
+        <!-- Match History & Comments -->
+        <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl">
+            <h2 class="text-sm font-bold text-cyan-600 dark:text-cyan-400 mb-3"><i class="fa-solid fa-calendar-days mr-1"></i> ম্যাচ রেকর্ড ও আলোচনা</h2>
+            <div id="matchesHistoryGrid" class="space-y-4"></div>
+        </section>
 
-            <!-- Leaderboard -->
-            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
-                <h2 class="text-sm font-bold text-amber-400 mb-3"><i class="fa-solid fa-trophy mr-1"></i> লাইভ লিডারবোর্ড</h2>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs text-gray-300">
-                        <thead class="bg-gray-950 text-gray-400 uppercase border-b border-gray-800">
-                            <tr>
-                                <th class="py-2.5 px-3">প্লেয়ার</th>
-                                <th class="py-2.5 px-3">পজিশন</th>
-                                <th class="py-2.5 px-3 text-center">ম্যাচ</th>
-                                <th class="py-2.5 px-3 text-center">গোল</th>
-                                <th class="py-2.5 px-3 text-center">অ্যাসিস্ট</th>
-                            </tr>
-                        </thead>
-                        <tbody id="leaderboardRows" class="divide-y divide-gray-800">
-                            <tr><td colspan="5" class="text-center py-4 text-gray-500">ডাটা লোড হচ্ছে...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Squad Grid -->
-            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
-                <h2 class="text-sm font-bold text-emerald-400 mb-3"><i class="fa-solid fa-users mr-1"></i> স্কোয়াড (প্রোফাইল দেখতে ট্যাপ করুন)</h2>
-                <div id="playersCardGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-            </section>
-        </div>
-
-        <!-- TAB 3: MATCHES & COMMENTS TAB -->
-        <div id="matchesTab" class="tab-content hidden space-y-6">
-            <!-- Match History & Comments -->
-            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl">
-                <h2 class="text-sm font-bold text-cyan-400 mb-3"><i class="fa-solid fa-calendar-days mr-1"></i> ম্যাচ রেকর্ড ও আলোচনা</h2>
-                <div id="matchesHistoryGrid" class="space-y-4"></div>
-            </section>
-        </div>
-
-        <!-- TAB 4: CHAT WALL TAB -->
-        <div id="chatTab" class="tab-content hidden space-y-6">
-            <!-- Club Wall Chat Board -->
-            <section class="bg-gray-900 border border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
-                <h2 class="text-sm font-bold text-emerald-400"><i class="fa-solid fa-comments mr-1"></i> ক্লাব ওয়াল (লাইভ চ্যাট বোর্ড)</h2>
-                <div id="chatMessagesContainer" class="bg-gray-950 border border-gray-800 rounded-xl p-3 h-80 overflow-y-auto space-y-2.5 text-xs">
-                    <!-- Chat Messages -->
-                </div>
-                <form id="chatForm" class="flex gap-2">
-                    <input type="text" id="chatInputMessage" placeholder="আপনার বার্তা এখানে লিখুন..." class="flex-1 bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-xs text-white" required>
-                    <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-4 py-2.5 rounded-xl text-xs"><i class="fa-solid fa-paper-plane"></i></button>
-                </form>
-            </section>
-        </div>
+        <!-- Club Wall Chat Board -->
+        <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                <h2 class="text-sm font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-comments mr-1"></i> ক্লাব ওয়াল (লাইভ চ্যাট বোর্ড)</h2>
+            </div>
+            <div id="chatMessagesContainer" class="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-xl p-3 h-56 overflow-y-auto space-y-2.5 text-xs">
+                <!-- Chat Messages -->
+            </div>
+            <form id="chatForm" class="flex gap-2">
+                <input type="text" id="chatInputMessage" placeholder="আপনার বার্তা এখানে লিখুন..." class="flex-1 bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2.5 text-xs" required>
+                <button type="submit" class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-4 py-2.5 rounded-xl text-xs"><i class="fa-solid fa-paper-plane"></i></button>
+            </form>
+        </section>
 
     </main>
 
     <!-- Individual Player Profile Modal -->
     <div id="profileModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-gray-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-4 relative">
-            <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-4 relative">
+            <button onclick="closeProfileModal()" class="absolute top-4 right-4 text-gray-400 hover:text-black dark:hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
             <div class="text-center space-y-2">
                 <img id="modalPhoto" src="" class="w-20 h-20 rounded-full mx-auto object-cover border-4 border-emerald-500 shadow-lg" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=000&name=FFC'">
-                <h3 id="modalName" class="text-base font-bold text-white"></h3>
-                <span id="modalPos" class="text-xs bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded-full"></span>
-                <p id="modalDesc" class="text-xs text-gray-400 italic pt-1"></p>
+                <h3 id="modalName" class="text-base font-bold"></h3>
+                <span id="modalPos" class="text-xs bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 px-2 py-0.5 rounded-full"></span>
+                <p id="modalDesc" class="text-xs text-gray-500 dark:text-gray-400 italic pt-1"></p>
             </div>
-            <div class="grid grid-cols-2 gap-2 bg-gray-950 p-3 rounded-xl text-center border border-gray-800">
+            <div class="grid grid-cols-2 gap-2 bg-gray-50 dark:bg-gray-950 p-3 rounded-xl text-center border border-gray-200 dark:border-gray-800">
                 <div>
                     <span class="block text-[10px] text-gray-400 uppercase">ম্যাচ</span>
-                    <span id="modalMatches" class="text-sm font-bold text-cyan-400">0</span>
+                    <span id="modalMatches" class="text-sm font-bold text-cyan-500">0</span>
                 </div>
                 <div>
                     <span class="block text-[10px] text-gray-400 uppercase">গোল</span>
-                    <span id="modalGoals" class="text-sm font-bold text-emerald-400">0</span>
+                    <span id="modalGoals" class="text-sm font-bold text-emerald-500">0</span>
                 </div>
                 <div>
                     <span class="block text-[10px] text-gray-400 uppercase">অ্যাসিস্ট</span>
-                    <span id="modalAssists" class="text-sm font-bold text-amber-400">0</span>
+                    <span id="modalAssists" class="text-sm font-bold text-amber-500">0</span>
                 </div>
                 <div>
                     <span class="block text-[10px] text-gray-400 uppercase">ম্যান অব দ্য ম্যাচ</span>
-                    <span id="modalMotm" class="text-sm font-bold text-purple-400">0</span>
+                    <span id="modalMotm" class="text-sm font-bold text-purple-500">0</span>
                 </div>
             </div>
 
             <!-- Self PIN Change Box for Logged In Player -->
-            <div id="pinChangeContainer" class="hidden pt-3 border-t border-gray-800 space-y-2">
-                <p class="text-[11px] font-bold text-emerald-400"><i class="fa-solid fa-key mr-1"></i> আপনার গোপন পিন পরিবর্তন করুন</p>
+            <div id="pinChangeContainer" class="hidden pt-3 border-t border-gray-200 dark:border-gray-800 space-y-2">
+                <p class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-key mr-1"></i> আপনার গোপন পিন পরিবর্তন করুন</p>
                 <div class="space-y-1.5">
-                    <input type="password" id="oldPinInput" placeholder="পুরনো পিন" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-2.5 py-1.5 text-[11px] text-white">
-                    <input type="password" id="newPinInput" placeholder="নতুন পিন (৪ ডিজিট)" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-2.5 py-1.5 text-[11px] text-white">
+                    <input type="password" id="oldPinInput" placeholder="পুরনো পিন" class="w-full bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg px-2.5 py-1.5 text-[11px]">
+                    <input type="password" id="newPinInput" placeholder="নতুন পিন (৪ ডিজিট)" class="w-full bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg px-2.5 py-1.5 text-[11px]">
                     <button onclick="changeMyPlayerPin()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-black font-bold py-1.5 rounded-lg text-[11px] transition">পিন আপডেট করুন</button>
                 </div>
             </div>
@@ -350,8 +284,6 @@
         const dbRefNotice = firebase.database().ref('ffc_notice_v6');
         const dbRefChat = firebase.database().ref('ffc_chat_v6');
         const dbRefComments = firebase.database().ref('ffc_comments_v6');
-        const dbRefAttendance = firebase.database().ref('ffc_attendance_v6');
-        const dbRefFees = firebase.database().ref('ffc_fees_v6');
 
         // Preset Unique PIN Mapping for Squad
         const playerPinMap = {
@@ -379,10 +311,41 @@
         let playersData = {};
         let matchesData = {};
         let commentsData = {};
-        let attendanceData = {};
-        let feesData = {};
         let currentLoggedInUser = localStorage.getItem('ffc_current_user') || "";
         let currentLoggedInPlayerId = localStorage.getItem('ffc_current_player_id') || "";
+
+        // Theme Toggle Logic
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('themeIcon');
+            if(html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                localStorage.setItem('ffc_theme', 'light');
+                icon.className = "fa-solid fa-sun";
+            } else {
+                html.classList.add('dark');
+                localStorage.setItem('ffc_theme', 'dark');
+                icon.className = "fa-solid fa-moon";
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('ffc_theme') || 'dark';
+            const icon = document.getElementById('themeIcon');
+            if(savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+                icon.className = "fa-solid fa-sun";
+            } else {
+                document.documentElement.classList.add('dark');
+                icon.className = "fa-solid fa-moon";
+            }
+
+            if(!currentLoggedInUser) {
+                openLoginModal();
+            } else {
+                updateUserBadge();
+            }
+        });
 
         dbRefPlayers.on('value', snapshot => { playersData = snapshot.val() || {}; renderApp(); populateSelectOptions(); });
         dbRefMatches.on('value', snapshot => { matchesData = snapshot.val() || {}; renderApp(); });
@@ -394,30 +357,6 @@
         });
         dbRefChat.on('value', snapshot => { renderChatMessages(snapshot.val() || {}); });
         dbRefComments.on('value', snapshot => { commentsData = snapshot.val() || {}; renderApp(); });
-        dbRefAttendance.on('value', snapshot => { attendanceData = snapshot.val() || {}; renderAttendanceList(); });
-        dbRefFees.on('value', snapshot => { feesData = snapshot.val() || {}; renderFeeTracker(); });
-
-        window.addEventListener('DOMContentLoaded', () => {
-            if(!currentLoggedInUser) {
-                openLoginModal();
-            } else {
-                updateUserBadge();
-            }
-        });
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.className = "tab-btn px-3 py-1.5 rounded-xl text-gray-400 hover:text-white transition flex items-center gap-1.5";
-            });
-            document.getElementById(tabId).classList.remove('hidden');
-            let activeBtnId = 'btn' + tabId.charAt(0).toUpperCase() + tabId.slice(1);
-            let activeBtn = document.getElementById(activeBtnId);
-            if(activeBtn) {
-                activeBtn.className = "tab-btn px-3 py-1.5 rounded-xl text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 transition flex items-center gap-1.5";
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
 
         function getPlayerPin(playerObj) {
             if(playerObj && playerObj.pin) return playerObj.pin;
@@ -461,8 +400,6 @@
                 document.getElementById('loginModal').classList.add('hidden');
                 document.getElementById('loginPlayerPin').value = '';
                 updateUserBadge();
-                renderApp();
-                renderFeeTracker();
                 alert(`স্বাগতম, ${currentLoggedInUser}! সফলভাবে লগইন হয়েছে।`);
             } else {
                 alert("ভুল পিন (PIN)! সঠিক গোপন পিন দিন।");
@@ -476,18 +413,16 @@
             localStorage.setItem('ffc_current_player_id', "");
             document.getElementById('loginModal').classList.add('hidden');
             updateUserBadge();
-            renderApp();
-            renderFeeTracker();
         }
 
         function updateUserBadge() {
             const badge = document.getElementById('userBadge');
             if(currentLoggedInUser && currentLoggedInUser !== "Visitor (ভিজিটর)") {
                 badge.innerText = `আইডি: ${currentLoggedInUser} (ভেরিফাইড)`;
-                badge.className = "text-[10px] text-emerald-400 font-semibold";
+                badge.className = "text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold";
             } else {
                 badge.innerText = `মোড: ভিজিটর (শুধুমাত্র দেখার জন্য)`;
-                badge.className = "text-[10px] text-amber-400 font-semibold";
+                badge.className = "text-[10px] text-amber-600 dark:text-amber-400 font-semibold";
             }
         }
 
@@ -498,7 +433,6 @@
                 document.getElementById('adminBtnText').innerText = "অ্যাডমিন";
                 document.getElementById('lockIcon').className = "fa-solid fa-lock mr-1";
                 renderApp();
-                renderFeeTracker();
                 return;
             }
 
@@ -507,91 +441,11 @@
                 isAdminLoggedIn = true;
                 document.getElementById('adminPanel').classList.remove('hidden');
                 document.getElementById('adminBtnText').innerText = "লগআউট";
-                document.getElementById('lockIcon').className = "fa-solid fa-unlock mr-1 text-emerald-400";
+                document.getElementById('lockIcon').className = "fa-solid fa-unlock mr-1 text-emerald-500";
                 renderApp();
-                renderFeeTracker();
             } else if (pin !== null) {
                 alert("ভুল পাসওয়ার্ড!");
             }
-        }
-
-        // Attendance RSVP functions
-        window.toggleAttendance = function(isAttending) {
-            if(!currentLoggedInPlayerId || currentLoggedInUser === "Visitor (ভিজিটর)") {
-                alert("উপস্থিতি নিশ্চিত করতে আপনার নিজস্ব ভেরিফাইড প্লেয়ার আইডি দিয়ে লগইন করুন!");
-                openLoginModal();
-                return;
-            }
-            dbRefAttendance.child(currentLoggedInPlayerId).set({
-                name: currentLoggedInUser,
-                status: isAttending ? "Playing" : "Not Playing",
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-            });
-        }
-
-        function renderAttendanceList() {
-            const container = document.getElementById('attendingListContainer');
-            const countBadge = document.getElementById('attendingCount');
-            let keys = Object.keys(attendanceData);
-            let playingList = keys.filter(k => attendanceData[k].status === "Playing").map(k => attendanceData[k].name);
-
-            countBadge.innerText = `${playingList.length} জন নিশ্চিত`;
-            container.innerHTML = playingList.length ? '' : '<p class="text-[11px] text-gray-500 italic">এখনো কেউ কনফার্ম করেনি। আপনি খেললে ওপরের বাটনে ক্লিক করুন!</p>';
-
-            playingList.forEach(name => {
-                container.innerHTML += `
-                    <span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 px-2.5 py-1 rounded-xl text-[11px] font-semibold flex items-center gap-1">
-                        <i class="fa-solid fa-check text-[10px]"></i> ${name}
-                    </span>
-                `;
-            });
-        }
-
-        // Turf Fee Tracker functions
-        window.toggleFeeStatus = function(playerId) {
-            if(!isAdminLoggedIn) return;
-            let currentStatus = feesData[playerId] || "Due";
-            let newStatus = currentStatus === "Paid" ? "Due" : "Paid";
-            dbRefFees.child(playerId).set(newStatus);
-        }
-
-        function renderFeeTracker() {
-            const tbody = document.getElementById('feeTrackerRows');
-            const actionHeader = document.getElementById('feeActionHeader');
-            let playerKeys = Object.keys(playersData);
-
-            if(isAdminLoggedIn) {
-                actionHeader.classList.remove('hidden');
-            } else {
-                actionHeader.classList.add('hidden');
-            }
-
-            tbody.innerHTML = playerKeys.length ? '' : '<tr><td colspan="3" class="text-center py-4 text-gray-500">প্লেয়ার ডাটা পাওয়া যায়নি</td></tr>';
-
-            playerKeys.forEach(k => {
-                let p = playersData[k];
-                let status = feesData[k] || "Due";
-                let statusBadge = status === "Paid" 
-                    ? '<span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[11px] font-bold"><i class="fa-solid fa-check mr-1"></i> পেইড (Paid)</span>'
-                    : '<span class="bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded text-[11px] font-bold"><i class="fa-solid fa-clock mr-1"></i> বাকি (Due)</span>';
-
-                let actionTD = isAdminLoggedIn ? `
-                    <td class="py-2 px-3 text-right">
-                        <button onclick="toggleFeeStatus('${k}')" class="bg-gray-800 hover:bg-gray-700 text-cyan-300 px-2.5 py-1 rounded text-[10px] border border-gray-700 font-bold transition">স্ট্যাটাস বদলান</button>
-                    </td>
-                ` : '';
-
-                tbody.innerHTML += `
-                    <tr class="hover:bg-gray-950/40">
-                        <td class="py-2 px-3 font-bold text-white flex items-center gap-2">
-                            <img src="${p.photo}" class="w-5 h-5 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=000&name=${encodeURIComponent(p.name)}'">
-                            ${p.name}
-                        </td>
-                        <td class="py-2 px-3 text-center">${statusBadge}</td>
-                        ${actionTD}
-                    </tr>
-                `;
-            });
         }
 
         document.getElementById('updateNoticeForm').addEventListener('submit', function(e) {
@@ -634,7 +488,6 @@
             if(date && title && score) {
                 dbRefMatches.push({ date, title, teamA, teamB, score, scorers });
                 document.getElementById('addMatchForm').reset();
-                alert("ম্যাচ রেকর্ড সফলভাবে সেভ হয়েছে!");
             }
         });
 
@@ -780,7 +633,7 @@
             const box = document.getElementById('h2hResultBox');
 
             if(!id1 || !id2 || !playersData[id1] || !playersData[id2]) {
-                box.innerHTML = '<p class="col-span-3 text-gray-500 text-xs py-2">তুলনা করার জন্য দুজন প্লেয়ার সিলেক্ট করুন।</p>';
+                box.innerHTML = '<p class="col-span-3 text-gray-400 text-xs py-2">তুলনা করার জন্য দুজন প্লেয়ার সিলেক্ট করুন।</p>';
                 return;
             }
 
@@ -788,14 +641,14 @@
             const p2 = playersData[id2];
 
             box.innerHTML = `
-                <div class="bg-gray-900 p-2 rounded-xl border border-gray-800">
-                    <span class="text-cyan-400 font-bold block">${p1.name}</span>
-                    <span class="text-[11px] text-gray-400 block mt-1">ম্যাচ: ${p1.matchesPlayed || 0} | গোল: ${p1.goals || 0}</span>
+                <div class="bg-white dark:bg-gray-900 p-2 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <span class="text-cyan-500 font-bold block">${p1.name}</span>
+                    <span class="text-[11px] text-gray-500 dark:text-gray-400 block mt-1">ম্যাচ: ${p1.matchesPlayed || 0} | গোল: ${p1.goals || 0}</span>
                 </div>
-                <div class="flex items-center justify-center font-bold text-amber-400 text-xs">VS</div>
-                <div class="bg-gray-900 p-2 rounded-xl border border-gray-800">
-                    <span class="text-emerald-400 font-bold block">${p2.name}</span>
-                    <span class="text-[11px] text-gray-400 block mt-1">ম্যাচ: ${p2.matchesPlayed || 0} | গোল: ${p2.goals || 0}</span>
+                <div class="flex items-center justify-center font-bold text-amber-500 text-xs">VS</div>
+                <div class="bg-white dark:bg-gray-900 p-2 rounded-xl border border-gray-200 dark:border-gray-800">
+                    <span class="text-emerald-500 font-bold block">${p2.name}</span>
+                    <span class="text-[11px] text-gray-500 dark:text-gray-400 block mt-1">ম্যাচ: ${p2.matchesPlayed || 0} | গোল: ${p2.goals || 0}</span>
                 </div>
             `;
         }
@@ -803,17 +656,17 @@
         function renderChatMessages(chatObj) {
             const container = document.getElementById('chatMessagesContainer');
             let keys = Object.keys(chatObj);
-            container.innerHTML = keys.length ? '' : '<p class="text-gray-500 text-center py-10 text-xs">এখনো কোনো চ্যাট মেসেজ নেই। আড্ডা শুরু করুন!</p>';
+            container.innerHTML = keys.length ? '' : '<p class="text-gray-400 text-center py-6 text-xs">এখনো কোনো চ্যাট মেসেজ নেই। আড্ডা শুরু করুন!</p>';
 
             keys.forEach(k => {
                 let c = chatObj[k];
                 container.innerHTML += `
-                    <div class="bg-gray-900 p-2.5 rounded-xl border border-gray-800/80 space-y-1">
+                    <div class="bg-white dark:bg-gray-900 p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 space-y-1">
                         <div class="flex justify-between items-center text-[10px]">
-                            <span class="font-bold text-emerald-400"><i class="fa-solid fa-user-circle mr-1"></i>${c.sender}</span>
-                            <span class="text-gray-500">${c.time}</span>
+                            <span class="font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-user-circle mr-1"></i>${c.sender}</span>
+                            <span class="text-gray-400">${c.time}</span>
                         </div>
-                        <p class="text-gray-200 text-xs pl-4">${c.message}</p>
+                        <p class="text-gray-700 dark:text-gray-200 text-xs pl-4">${c.message}</p>
                     </div>
                 `;
             });
@@ -841,7 +694,7 @@
             let sortedList = [...playerList].sort((a, b) => (Number(b.goals) || 0) - (Number(a.goals) || 0));
 
             // Render Player Cards
-            grid.innerHTML = playerList.length ? '' : '<p class="text-xs text-gray-500 col-span-full text-center py-4">কোনো প্লেয়ার খুঁজে পাওয়া যায়নি।</p>';
+            grid.innerHTML = playerList.length ? '' : '<p class="text-xs text-gray-400 col-span-full text-center py-4">কোনো প্লেয়ার খুঁজে পাওয়া যায়নি।</p>';
             playerList.forEach(p => {
                 let m = Number(p.matchesPlayed) || 0;
                 let g = Number(p.goals) || 0;
@@ -851,33 +704,33 @@
                 let controlsHTML = '';
                 if (isAdminLoggedIn) {
                     controlsHTML = `
-                        <div class="mt-3 pt-2 border-t border-gray-800 space-y-1.5 text-xs">
-                            <div class="bg-gray-950 p-1 rounded flex items-center justify-between border border-gray-800">
-                                <span class="text-gray-400">ম্যাচ:</span>
+                        <div class="mt-3 pt-2 border-t border-gray-200 dark:border-gray-800 space-y-1.5 text-xs">
+                            <div class="bg-gray-100 dark:bg-gray-950 p-1 rounded flex items-center justify-between border border-gray-200 dark:border-gray-800">
+                                <span class="text-gray-500">ম্যাচ:</span>
                                 <div class="flex gap-1">
-                                    <button onclick="changeStatKey('${p.id}', 'matchesPlayed', -1)" class="bg-rose-500/20 text-rose-400 px-2 rounded font-bold">-</button>
-                                    <button onclick="changeStatKey('${p.id}', 'matchesPlayed', 1)" class="bg-cyan-500/20 text-cyan-400 px-2 rounded font-bold">+</button>
+                                    <button onclick="changeStatKey('${p.id}', 'matchesPlayed', -1)" class="bg-rose-500/20 text-rose-500 px-2 rounded font-bold">-</button>
+                                    <button onclick="changeStatKey('${p.id}', 'matchesPlayed', 1)" class="bg-cyan-500/20 text-cyan-500 px-2 rounded font-bold">+</button>
                                 </div>
                             </div>
-                            <div class="bg-gray-950 p-1 rounded flex items-center justify-between border border-gray-800">
-                                <span class="text-gray-400">গোল:</span>
+                            <div class="bg-gray-100 dark:bg-gray-950 p-1 rounded flex items-center justify-between border border-gray-200 dark:border-gray-800">
+                                <span class="text-gray-500">গোল:</span>
                                 <div class="flex gap-1">
-                                    <button onclick="changeStatKey('${p.id}', 'goals', -1)" class="bg-rose-500/20 text-rose-400 px-2 rounded font-bold">-</button>
-                                    <button onclick="changeStatKey('${p.id}', 'goals', 1)" class="bg-emerald-500/20 text-emerald-400 px-2 rounded font-bold">+</button>
+                                    <button onclick="changeStatKey('${p.id}', 'goals', -1)" class="bg-rose-500/20 text-rose-500 px-2 rounded font-bold">-</button>
+                                    <button onclick="changeStatKey('${p.id}', 'goals', 1)" class="bg-emerald-500/20 text-emerald-500 px-2 rounded font-bold">+</button>
                                 </div>
                             </div>
-                            <div class="bg-gray-950 p-1 rounded flex items-center justify-between border border-gray-800">
-                                <span class="text-gray-400">অ্যাসিস্ট:</span>
+                            <div class="bg-gray-100 dark:bg-gray-950 p-1 rounded flex items-center justify-between border border-gray-200 dark:border-gray-800">
+                                <span class="text-gray-500">অ্যাসিস্ট:</span>
                                 <div class="flex gap-1">
-                                    <button onclick="changeStatKey('${p.id}', 'assists', -1)" class="bg-rose-500/20 text-rose-400 px-2 rounded font-bold">-</button>
-                                    <button onclick="changeStatKey('${p.id}', 'assists', 1)" class="bg-amber-500/20 text-amber-400 px-2 rounded font-bold">+</button>
+                                    <button onclick="changeStatKey('${p.id}', 'assists', -1)" class="bg-rose-500/20 text-rose-500 px-2 rounded font-bold">-</button>
+                                    <button onclick="changeStatKey('${p.id}', 'assists', 1)" class="bg-amber-500/20 text-amber-500 px-2 rounded font-bold">+</button>
                                 </div>
                             </div>
-                            <div class="bg-gray-950 p-1 rounded flex items-center justify-between border border-gray-800">
-                                <span class="text-gray-400">MotM:</span>
+                            <div class="bg-gray-100 dark:bg-gray-950 p-1 rounded flex items-center justify-between border border-gray-200 dark:border-gray-800">
+                                <span class="text-gray-500">MotM:</span>
                                 <div class="flex gap-1">
-                                    <button onclick="changeStatKey('${p.id}', 'motm', -1)" class="bg-rose-500/20 text-rose-400 px-2 rounded font-bold">-</button>
-                                    <button onclick="changeStatKey('${p.id}', 'motm', 1)" class="bg-purple-500/20 text-purple-400 px-2 rounded font-bold">+</button>
+                                    <button onclick="changeStatKey('${p.id}', 'motm', -1)" class="bg-rose-500/20 text-rose-500 px-2 rounded font-bold">-</button>
+                                    <button onclick="changeStatKey('${p.id}', 'motm', 1)" class="bg-purple-500/20 text-purple-500 px-2 rounded font-bold">+</button>
                                 </div>
                             </div>
                         </div>
@@ -885,21 +738,21 @@
                 }
 
                 grid.innerHTML += `
-                    <div class="bg-gray-950 border border-gray-800 p-3 rounded-xl shadow">
+                    <div class="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-3 rounded-xl shadow-sm">
                         <div class="flex items-center justify-between">
                             <div onclick="openProfileModal('${p.id}')" class="flex items-center gap-2.5 cursor-pointer">
                                 <img src="${p.photo}" class="w-10 h-10 rounded-full object-cover border border-emerald-500" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=000&name=${encodeURIComponent(p.name)}'">
                                 <div>
-                                    <h4 class="font-bold text-white text-xs hover:underline">${p.name}</h4>
-                                    <span class="text-[10px] text-gray-400 bg-gray-900 px-1.5 py-0.5 rounded">${p.pos}</span>
+                                    <h4 class="font-bold text-xs hover:underline">${p.name}</h4>
+                                    <span class="text-[10px] text-gray-500 dark:text-gray-400 bg-gray-200 dark:bg-gray-900 px-1.5 py-0.5 rounded">${p.pos}</span>
                                 </div>
                             </div>
                             ${isAdminLoggedIn ? `<button onclick="removePlayerNode('${p.id}')" class="text-rose-500 text-xs px-2"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
-                        <div onclick="openProfileModal('${p.id}')" class="flex justify-around bg-gray-900 mt-2.5 py-1.5 rounded-lg text-xs font-bold cursor-pointer">
-                            <span class="text-cyan-400">ম্যাচ: ${m}</span>
-                            <span class="text-emerald-400">গোল: ${g}</span>
-                            <span class="text-amber-400">অ্যাসিস্ট: ${a}</span>
+                        <div onclick="openProfileModal('${p.id}')" class="flex justify-around bg-white dark:bg-gray-900 mt-2.5 py-1.5 rounded-lg text-xs font-bold cursor-pointer border border-gray-200 dark:border-gray-800">
+                            <span class="text-cyan-500">ম্যাচ: ${m}</span>
+                            <span class="text-emerald-500">গোল: ${g}</span>
+                            <span class="text-amber-500">অ্যাসিস্ট: ${a}</span>
                         </div>
                         ${controlsHTML}
                     </div>
@@ -907,18 +760,18 @@
             });
 
             // Render Leaderboard
-            tbody.innerHTML = sortedList.length ? '' : '<tr><td colspan="5" class="text-center py-4 text-xs text-gray-500">কোনো ডাটা নেই</td></tr>';
+            tbody.innerHTML = sortedList.length ? '' : '<tr><td colspan="5" class="text-center py-4 text-xs text-gray-400">কোনো ডাটা নেই</td></tr>';
             sortedList.forEach(p => {
                 tbody.innerHTML += `
-                    <tr class="hover:bg-gray-950/50 cursor-pointer" onclick="openProfileModal('${p.id}')">
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-950/50 cursor-pointer" onclick="openProfileModal('${p.id}')">
                         <td class="py-2.5 px-3 flex items-center gap-2">
                             <img src="${p.photo}" class="w-6 h-6 rounded-full object-cover" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=000&name=${encodeURIComponent(p.name)}'">
-                            <span class="font-bold text-white">${p.name}</span>
+                            <span class="font-bold">${p.name}</span>
                         </td>
-                        <td class="py-2.5 px-3 text-gray-400">${p.pos}</td>
-                        <td class="py-2.5 px-3 text-center font-bold text-cyan-400">${p.matchesPlayed || 0}</td>
-                        <td class="py-2.5 px-3 text-center font-bold text-emerald-400">${p.goals || 0}</td>
-                        <td class="py-2.5 px-3 text-center font-bold text-amber-400">${p.assists || 0}</td>
+                        <td class="py-2.5 px-3 text-gray-500 dark:text-gray-400">${p.pos}</td>
+                        <td class="py-2.5 px-3 text-center font-bold text-cyan-500">${p.matchesPlayed || 0}</td>
+                        <td class="py-2.5 px-3 text-center font-bold text-emerald-500">${p.goals || 0}</td>
+                        <td class="py-2.5 px-3 text-center font-bold text-amber-500">${p.assists || 0}</td>
                     </tr>
                 `;
             });
@@ -926,7 +779,7 @@
             // Render Matches History & Comments
             let matchKeys = Object.keys(matchesData);
             let matchQueue = matchKeys.map(k => ({ id: k, ...matchesData[k] })).reverse();
-            matchGrid.innerHTML = matchQueue.length ? '' : '<p class="text-xs text-gray-500 text-center py-2">কোনো ম্যাচ রেকর্ড পাওয়া যায়নি।</p>';
+            matchGrid.innerHTML = matchQueue.length ? '' : '<p class="text-xs text-gray-400 text-center py-2">কোনো ম্যাচ রেকর্ড পাওয়া যায়নি।</p>';
             
             matchQueue.forEach(m => {
                 let matchComments = commentsData[m.id] || {};
@@ -936,46 +789,46 @@
                 commentKeys.forEach(ck => {
                     let com = matchComments[ck];
                     commentsHTML += `
-                        <div class="bg-gray-950 p-2 rounded-lg border border-gray-800 text-[11px] space-y-0.5">
-                            <div class="flex justify-between font-bold text-emerald-400">
+                        <div class="bg-gray-50 dark:bg-gray-950 p-2 rounded-lg border border-gray-200 dark:border-gray-800 text-[11px] space-y-0.5">
+                            <div class="flex justify-between font-bold text-emerald-600 dark:text-emerald-400">
                                 <span><i class="fa-solid fa-user mr-1"></i>${com.sender}</span>
-                                <span class="text-[9px] text-gray-500">${com.time}</span>
+                                <span class="text-[9px] text-gray-400">${com.time}</span>
                             </div>
-                            <p class="text-gray-300 pl-3">${com.text}</p>
+                            <p class="text-gray-700 dark:text-gray-300 pl-3">${com.text}</p>
                         </div>
                     `;
                 });
 
                 matchGrid.innerHTML += `
-                    <div class="bg-gray-950 border border-gray-800 p-3.5 rounded-xl space-y-3 shadow">
-                        <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-                            <h4 class="text-xs font-bold text-amber-400"><i class="fa-solid fa-futbol mr-1"></i> ${m.title}</h4>
+                    <div class="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-3.5 rounded-xl space-y-3 shadow-sm">
+                        <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                            <h4 class="text-xs font-bold text-amber-600 dark:text-amber-400"><i class="fa-solid fa-futbol mr-1"></i> ${m.title}</h4>
                             <span class="text-[10px] text-gray-400"><i class="fa-regular fa-calendar mr-1"></i>${m.date}</span>
                         </div>
                         <div class="grid grid-cols-2 gap-2 text-xs">
-                            <div class="bg-gray-900 p-2 rounded-lg border border-gray-800/80">
-                                <span class="text-emerald-400 font-bold block">টিম A / লাল:</span>
-                                <p class="text-[11px] text-gray-300">${m.teamA}</p>
+                            <div class="bg-white dark:bg-gray-900 p-2 rounded-lg border border-gray-200 dark:border-gray-800">
+                                <span class="text-emerald-600 dark:text-emerald-400 font-bold block">টিম A / লাল:</span>
+                                <p class="text-[11px] text-gray-600 dark:text-gray-300">${m.teamA}</p>
                             </div>
-                            <div class="bg-gray-900 p-2 rounded-lg border border-gray-800/80">
-                                <span class="text-cyan-400 font-bold block">টিম B / নীল:</span>
-                                <p class="text-[11px] text-gray-300">${m.teamB}</p>
+                            <div class="bg-white dark:bg-gray-900 p-2 rounded-lg border border-gray-200 dark:border-gray-800">
+                                <span class="text-cyan-600 dark:text-cyan-400 font-bold block">টিম B / নীল:</span>
+                                <p class="text-[11px] text-gray-600 dark:text-gray-300">${m.teamB}</p>
                             </div>
                         </div>
                         <div class="flex justify-between items-center pt-1 text-xs">
-                            <span class="font-bold text-white">ফলাফল: <span class="text-amber-400">${m.score}</span></span>
-                            ${m.scorers ? `<span class="text-[11px] text-gray-400"><i class="fa-solid fa-star mr-1 text-amber-400"></i>${m.scorers}</span>` : ''}
+                            <span class="font-bold">ফলাফল: <span class="text-amber-500">${m.score}</span></span>
+                            ${m.scorers ? `<span class="text-[11px] text-gray-500 dark:text-gray-400"><i class="fa-solid fa-star mr-1 text-amber-500"></i>${m.scorers}</span>` : ''}
                             ${isAdminLoggedIn ? `<button onclick="removeMatchNode('${m.id}')" class="text-rose-500 text-xs px-2"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
                         
                         <!-- Match Comments Section -->
-                        <div class="border-t border-gray-800 pt-2.5 space-y-2">
-                            <p class="text-[11px] font-bold text-cyan-400"><i class="fa-solid fa-comments mr-1"></i> ম্যাচ নিয়ে আলোচনা (${commentKeys.length})</p>
+                        <div class="border-t border-gray-200 dark:border-gray-800 pt-2.5 space-y-2">
+                            <p class="text-[11px] font-bold text-cyan-600 dark:text-cyan-400"><i class="fa-solid fa-comments mr-1"></i> ম্যাচ নিয়ে আলোচনা (${commentKeys.length})</p>
                             <div class="space-y-1.5 max-h-32 overflow-y-auto">
-                                ${commentsHTML || '<p class="text-[10px] text-gray-500 italic">এই ম্যাচে এখনো কোনো কমেন্ট করা হয়নি।</p>'}
+                                ${commentsHTML || '<p class="text-[10px] text-gray-400 italic">এই ম্যাচে এখনো কোনো কমেন্ট করা হয়নি।</p>'}
                             </div>
                             <div class="flex gap-1 pt-1">
-                                <input type="text" id="commentInput_${m.id}" placeholder="ম্যাচ নিয়ে আপনার মতামত লিখুন..." class="flex-1 bg-gray-900 border border-gray-700 rounded-lg px-2.5 py-1.5 text-[11px] text-white">
+                                <input type="text" id="commentInput_${m.id}" placeholder="ম্যাচ নিয়ে আপনার মতামত লিখুন..." class="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-2.5 py-1.5 text-[11px]">
                                 <button onclick="submitMatchComment('${m.id}')" class="bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-3 py-1 rounded-lg text-[11px]">কমেন্ট</button>
                             </div>
                         </div>

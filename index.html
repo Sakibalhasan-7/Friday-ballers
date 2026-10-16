@@ -161,7 +161,7 @@
             </form>
         </div>
 
-        <!-- TAB 1: HOME TAB (Leaderboard first, then Attendance, then Fee Tracker) -->
+        <!-- TAB 1: HOME TAB (Leaderboard, RSVP, Fee Tracker) -->
         <div id="homeTab" class="tab-content space-y-6">
             
             <!-- Leaderboard at the very top of Home -->
@@ -205,7 +205,7 @@
                 </div>
             </section>
 
-            <!-- Turf Match Fee / Due Tracker (Clean Modern Cards placed after leaderboard & RSVP) -->
+            <!-- Turf Match Fee / Due Tracker -->
             <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
                 <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
                     <div>
@@ -221,7 +221,7 @@
             </section>
         </div>
 
-        <!-- TAB 2: SQUAD & PROFILE TAB -->
+        <!-- TAB 2: SQUAD & PROFILE TAB (With Admin Stat Control buttons restored!) -->
         <div id="squadTab" class="tab-content hidden space-y-6">
             <!-- Squad Grid & Filters -->
             <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
@@ -517,6 +517,7 @@
                 document.getElementById('adminBtnText').innerText = "অ্যাডমিন";
                 document.getElementById('lockIcon').className = "fa-solid fa-lock mr-1";
                 renderFeeTracker();
+                renderApp();
                 return;
             }
 
@@ -527,6 +528,7 @@
                 document.getElementById('adminBtnText').innerText = "লগআউট";
                 document.getElementById('lockIcon').className = "fa-solid fa-unlock mr-1 text-emerald-500";
                 renderFeeTracker();
+                renderApp();
             } else if (pin !== null) {
                 alert("ভুল পাসওয়ার্ড!");
             }
@@ -863,7 +865,7 @@
 
             let sortedList = [...playerList].sort((a, b) => (Number(b.goals) || 0) - (Number(a.goals) || 0));
 
-            // Render Player Cards (Squad Tab)
+            // Render Player Cards & Admin Stat Controls
             if(grid) {
                 grid.innerHTML = playerList.length ? '' : '<p class="text-xs text-gray-400 col-span-full text-center py-4">কোনো প্লেয়ার খুঁজে পাওয়া যায়নি।</p>';
                 playerList.forEach(p => {

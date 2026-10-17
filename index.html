@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friday Football Club - Ultimate Complete Edition</title>
+    <title>Friday Football Club - FFC Ultimate Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -176,11 +176,11 @@
                     <h2 class="text-base font-bold text-amber-500"><i class="fa-solid fa-award mr-1.5"></i> ক্লাবের সকল ৪০+ অ্যাচিভমেন্ট গ্যালারি</h2>
                     <span id="userAchievementCountBadge" class="bg-amber-500/20 text-amber-500 border border-amber-500/30 px-3 py-1 rounded-xl text-xs font-bold">আনলকড: 0/40</span>
                 </div>
-                <div class="flex gap-2 text-xs font-bold border-b border-gray-200 dark:border-gray-800 pb-3">
-                    <button onclick="filterAchievementGallery('all')" class="ach-filter-btn px-3 py-1 rounded-lg bg-amber-500 text-black">সবগুলো</button>
-                    <button onclick="filterAchievementGallery('Bronze')" class="ach-filter-btn px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400">🥉 Bronze</button>
-                    <button onclick="filterAchievementGallery('Gold')" class="ach-filter-btn px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400">🥇 Gold</button>
-                    <button onclick="filterAchievementGallery('Elite')" class="ach-filter-btn px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400">💎 Elite</button>
+                <div class="flex gap-2 text-xs font-bold border-b border-gray-200 dark:border-gray-800 pb-3 overflow-x-auto">
+                    <button onclick="filterAchievementGallery('all')" class="ach-filter-btn px-3 py-1 rounded-lg bg-amber-500 text-black shrink-0">সবগুলো</button>
+                    <button onclick="filterAchievementGallery('Bronze')" class="ach-filter-btn px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400 shrink-0">🥉 Bronze</button>
+                    <button onclick="filterAchievementGallery('Gold')" class="ach-filter-btn px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400 shrink-0">🥇 Gold</button>
+                    <button onclick="filterAchievementGallery('Elite')" class="ach-filter-btn px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400 shrink-0">💎 Elite</button>
                 </div>
                 <div id="allAchievementsGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2"></div>
             </section>

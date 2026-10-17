@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friday Football Club - Final Bug-Free Edition</title>
+    <title>Friday Football Club - FFC Ultimate Complete Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -18,19 +18,19 @@
 </head>
 <body class="min-h-screen pb-28 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200">
 
-    <!-- Player Secure Login / Visitor Modal -->
+    <!-- Player Secure Login Modal -->
     <div id="loginModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-4">
             <div class="text-center space-y-1">
                 <span class="bg-emerald-500 text-black px-3 py-1 rounded-xl font-black text-sm">FFC</span>
                 <h2 class="text-lg font-bold mt-2">ফুটবল ক্লাবে স্বাগতম</h2>
-                <p class="text-xs text-gray-500 dark:text-gray-400">আপনার আইডি সিলেক্ট করুন এবং গোপন পিন দিন</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">আপনার নাম সিলেক্ট করুন এবং পিন দিন</p>
             </div>
             <div class="space-y-3 relative z-50">
                 <div>
-                    <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">আপনার নাম সিলেক্ট করুন:</label>
+                    <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">প্লেয়ার সিলেক্ট করুন:</label>
                     <select id="loginPlayerSelect" class="w-full bg-gray-100 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2.5 text-xs font-bold relative z-50">
-                        <option value="">-- প্লেয়ার সিলেক্ট করুন --</option>
+                        <option value="">-- প্লেয়ার লোড হচ্ছে --</option>
                     </select>
                 </div>
                 <div>
@@ -115,7 +115,7 @@
             </div>
         </div>
 
-        <!-- Admin Control Box -->
+        <!-- Admin Control Panel -->
         <div id="adminPanel" class="hidden bg-white dark:bg-gray-900 border-2 border-emerald-500/50 rounded-2xl p-4 shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
                 <h3 class="text-sm font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-shield-halved mr-1"></i> অ্যাডমিন কন্ট্রোল প্যানেল</h3>
@@ -196,7 +196,7 @@
             </section>
         </div>
 
-        <!-- TAB 4: TOURNAMENT (SIMPLIFIED GROUP STAGE & PLAYOFF ROADMAP WITH SCORE INPUT) -->
+        <!-- TAB 4: TOURNAMENT (3-TEAM GROUP STAGE & ROADMAP PLAYOFF) -->
         <div id="tournamentTab" class="tab-content hidden space-y-6">
             <div id="tourneyStatusBanner" class="bg-gradient-to-r from-amber-900/20 via-amber-950/10 to-transparent border border-amber-500/40 rounded-2xl p-4 shadow-md flex justify-between items-center">
                 <div class="space-y-1">
@@ -503,7 +503,7 @@
             } else if (pin !== null) alert("ভুল পাসওয়ার্ড!");
         }
 
-        /* --- SIMPLIFIED TOURNAMENT ENGINE WITH SCORE INPUT & ROADMAP --- */
+        /* --- 3-TEAM TOURNAMENT ENGINE WITH SCORE INPUT & ROADMAP --- */
         window.generateCustomGroupRoadmapTournament = function() {
             if(!isAdminLoggedIn) return alert("শুধুমাত্র অ্যাডমিন টুর্নামেন্ট শুরু করতে পারবেন!");
             let name1 = document.getElementById('tName1').value.trim() || "Team Red";
@@ -693,7 +693,6 @@
             { id: "e10", tier: "Elite", name: "Hall of Fame", desc: "হল অব ফেম", custom: "Hall of Fame" }
         ];
 
-        /* --- ADMIN EXCLUSIVE BADGE ASSIGNMENT FUNCTION --- */
         function giveAdminExclusiveBadge() {
             if(!isAdminLoggedIn || !activeModalPlayerId) return;
             let badgeName = document.getElementById('adminCustomBadgeSelect').value;

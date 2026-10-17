@@ -267,14 +267,26 @@
             </section>
         </div>
 
-        <!-- TAB 3: TOURNAMENT TAB (Restricted to Admin Only for Generation) -->
+        <!-- TAB 3: TOURNAMENT TAB (With 2-4 Hours slots, Delete option, History & Admin Only control) -->
         <div id="tournamentTab" class="tab-content hidden space-y-6">
+            
+            <!-- Tournament Status & Archive Banner -->
+            <div id="tourneyStatusBanner" class="bg-gradient-to-r from-amber-900/20 via-amber-950/10 to-transparent border border-amber-500/40 rounded-2xl p-4 shadow-md flex justify-between items-center">
+                <div class="space-y-1">
+                    <span id="tourneyBadgeState" class="bg-amber-500 text-black px-2.5 py-0.5 rounded-lg text-[10px] font-bold">চলমান টুর্নামেন্ট</span>
+                    <h3 id="tourneyTitleName" class="text-xs font-bold text-amber-600 dark:text-amber-400 mt-1">টার্ফ টুর্নামেন্ট স্লট</h3>
+                </div>
+                <div id="tourneyActionBtnsContainer">
+                    <!-- Admin Delete / Complete button -->
+                </div>
+            </div>
+
             <!-- Smart Tournament Generator Form (Admin Only) -->
             <section id="tourneyAdminControlBox" class="hidden bg-white dark:bg-gray-900 border-2 border-amber-500/50 rounded-2xl p-4 shadow-xl space-y-4">
                 <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
                     <div>
                         <h2 class="text-sm font-bold text-amber-500"><i class="fa-solid fa-shield-halved mr-1"></i> টুর্নামেন্ট হোস্ট প্যানেল (অ্যাডমিন অনলি)</h2>
-                        <p class="text-[10px] text-gray-400">৩ বা ৪ টিমের জন্য সময় অনুযায়ী অটোমেটিক ফিক্সচার ও ম্যাচের সময় জেনারেটর</p>
+                        <p class="text-[10px] text-gray-400">২, ৩ বা ৪ ঘণ্টার টার্ফ স্লটের জন্য অটোমেটিক ফিক্সচার জেনারেটর</p>
                     </div>
                 </div>
 
@@ -287,15 +299,16 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold mb-1 text-gray-400">টার্ফ স্লট সময় (ঘণ্টা):</label>
+                        <label class="block text-xs font-semibold mb-1 text-gray-400">টার্ফ স্লট সময়:</label>
                         <select id="tourneyDuration" class="w-full bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2 text-xs font-bold">
                             <option value="2">২ ঘণ্টা (১২০ মিনিট)</option>
                             <option value="3" selected>৩ ঘণ্টা (১৮০ মিনিট)</option>
+                            <option value="4">৪ ঘণ্টা (২৪০ মিনিট)</option>
                         </select>
                     </div>
                     <div class="flex items-end">
                         <button onclick="generateSmartTournamentSchedule()" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> নতুন টুর্নামেন্ট জেনারেট করুন
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> নতুন টুর্নামেন্ট শুরু করুন
                         </button>
                     </div>
                 </div>
@@ -339,6 +352,14 @@
                     <p class="text-gray-400 text-center py-4">কোনো ফিক্সচার তৈরি করা হয়নি।</p>
                 </div>
             </section>
+
+            <!-- Tournament History Archive Section -->
+            <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <h2 class="text-sm font-bold text-purple-500"><i class="fa-solid fa-clock-rotate-left mr-1"></i> টুর্নামেন্ট হিস্ট্রি (Archive)</h2>
+                <div id="tourneyHistoryContainer" class="space-y-2 text-xs">
+                    <p class="text-gray-400 italic">পূর্ববর্তী কোনো টুর্নামেন্টের রেকর্ড নেই।</p>
+                </div>
+            </section>
         </div>
 
         <!-- TAB 4: MATCHES & COMMENTS TAB -->
@@ -377,6 +398,12 @@
                 <span id="modalPos" class="text-xs bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 px-2 py-0.5 rounded-full"></span>
                 <p id="modalDesc" class="text-xs text-gray-500 dark:text-gray-400 italic pt-1"></p>
             </div>
+            
+            <!-- Player Achievements Badges -->
+            <div id="modalAchievementsContainer" class="flex flex-wrap justify-center gap-1.5 pt-1">
+                <!-- Dynamic Achievement Badges -->
+            </div>
+
             <div class="grid grid-cols-2 gap-2 bg-gray-50 dark:bg-gray-950 p-3 rounded-xl text-center border border-gray-200 dark:border-gray-800">
                 <div>
                     <span class="block text-[10px] text-gray-400 uppercase">ম্যাচ</span>
@@ -428,6 +455,7 @@
         const dbRefAttendance = firebase.database().ref('ffc_attendance_v6');
         const dbRefFees = firebase.database().ref('ffc_fees_v6');
         const dbRefTourney = firebase.database().ref('ffc_tourney_v6');
+        const dbRefTourneyHistory = firebase.database().ref('ffc_tourney_history_v6');
 
         const playerPinMap = {
             "Sakib Al hasan": "7842",
@@ -457,6 +485,7 @@
         let attendanceData = {};
         let feesData = {};
         let tourneyData = {};
+        let tourneyHistoryData = {};
         let currentLoggedInUser = localStorage.getItem('ffc_current_user') || "";
         let currentLoggedInPlayerId = localStorage.getItem('ffc_current_player_id') || "";
 
@@ -519,6 +548,7 @@
         dbRefAttendance.on('value', snapshot => { attendanceData = snapshot.val() || {}; renderAttendanceList(); });
         dbRefFees.on('value', snapshot => { feesData = snapshot.val() || {}; renderFeeTracker(); });
         dbRefTourney.on('value', snapshot => { tourneyData = snapshot.val() || {}; renderTournamentUI(); });
+        dbRefTourneyHistory.on('value', snapshot => { tourneyHistoryData = snapshot.val() || {}; renderTournamentUI(); });
 
         function getPlayerPin(playerObj) {
             if(playerObj && playerObj.pin) return playerObj.pin;
@@ -616,7 +646,7 @@
             }
         }
 
-        /* --- TOURNAMENT SMART ALGORITHM & LOGIC (ADMIN ONLY) --- */
+        /* --- TOURNAMENT SMART ALGORITHM & ARCHIVE --- */
         window.generateSmartTournamentSchedule = function() {
             if(!isAdminLoggedIn) {
                 alert("শুধুমাত্র অ্যাডমিন নতুন টুর্নামেন্ট জেনারেট করতে পারবেন!");
@@ -665,6 +695,7 @@
             }
 
             let newTourney = {
+                date: new Date().toLocaleDateString(),
                 numTeams: numTeams,
                 durationHours: durationHours,
                 teams: teams,
@@ -672,7 +703,24 @@
             };
 
             dbRefTourney.set(newTourney);
-            alert("অ্যাডমিন হিসেবে স্মার্ট এলগরিদম সফলভাবে টুর্নামেন্ট শিডিউল তৈরি করেছে!");
+            alert("সফলভাবে নতুন টুর্নামেন্ট শুরু হয়েছে!");
+        }
+
+        window.completeAndArchiveTournament = function() {
+            if(!isAdminLoggedIn) return;
+            if(confirm("টুর্নামেন্টটি কি শেষ (Complete) করে হিস্ট্রি ফোল্ডারে সেভ করতে চান?")) {
+                dbRefTourneyHistory.push(tourneyData);
+                dbRefTourney.remove();
+                alert("টুর্নামেন্টটি সফলভাবে আর্কাইভ করা হয়েছে!");
+            }
+        }
+
+        window.deleteActiveTournament = function() {
+            if(!isAdminLoggedIn) return;
+            if(confirm("চলমান টুর্নামেন্টটি সম্পূর্ণ মুছে ফেলতে চান?")) {
+                dbRefTourney.remove();
+                alert("টুর্নামেন্ট মুছে ফেলা হয়েছে!");
+            }
         }
 
         window.updateMatchScore = function(fixtureId) {
@@ -740,8 +788,11 @@
             const summaryCard = document.getElementById('algorithmSummaryCard');
             const standingsBody = document.getElementById('tourneyStandingsRows');
             const fixturesBox = document.getElementById('tourneyFixturesList');
+            const historyBox = document.getElementById('tourneyHistoryContainer');
+            const actionBtnsContainer = document.getElementById('tourneyActionBtnsContainer');
+            const badgeState = document.getElementById('tourneyBadgeState');
+            const titleName = document.getElementById('tourneyTitleName');
 
-            // Toggle Admin Host Form visibility based on login state
             if(adminControlBox) {
                 if(isAdminLoggedIn) {
                     adminControlBox.classList.remove('hidden');
@@ -752,66 +803,116 @@
 
             if(!tourneyData.numTeams) {
                 if(summaryCard) summaryCard.classList.add('hidden');
+                if(badgeState) badgeState.innerText = "কোনো টুর্নামেন্ট নেই";
+                if(titleName) titleName.innerText = "বর্তমানে কোনো স্লট বা টুর্নামেন্ট চলছে না";
+                if(actionBtnsContainer) actionBtnsContainer.innerHTML = '';
                 if(standingsBody) standingsBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-400">চলমান কোনো টুর্নামেন্ট ডাটা নেই</td></tr>';
                 if(fixturesBox) fixturesBox.innerHTML = '<p class="text-gray-400 text-center py-4">কোনো ফিক্সচার তৈরি করা হয়নি।</p>';
-                return;
-            }
-
-            if(summaryCard) {
-                summaryCard.classList.remove('hidden');
-                let matchMins = tourneyData.fixtures && tourneyData.fixtures[0] ? tourneyData.fixtures[0].mins : 15;
-                summaryCard.innerHTML = `
-                    <p class="font-bold text-amber-500"><i class="fa-solid fa-calculator mr-1"></i> টুর্নামেন্ট ডিটেইলস (${tourneyData.durationHours} ঘণ্টার স্লট - ${tourneyData.numTeams} টিম):</p>
-                    <p class="text-gray-300">• মোট ম্যাচ: <b>${tourneyData.fixtures.length}টি</b> | প্রতিটি ম্যাচের সময়: <b>~${matchMins} মিনিট</b></p>
-                `;
-            }
-
-            if(standingsBody && tourneyData.teams) {
-                let sortedTeams = [...tourneyData.teams].sort((a,b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
-                standingsBody.innerHTML = '';
-                sortedTeams.forEach((t, idx) => {
-                    standingsBody.innerHTML += `
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-950/50">
-                            <td class="py-2 px-2 font-bold flex items-center gap-1.5">
-                                <span class="w-4 h-4 rounded-full bg-amber-500/20 text-amber-500 text-[10px] flex items-center justify-center font-bold">${idx + 1}</span>
-                                ${t.name}
-                            </td>
-                            <td class="py-2 px-2 text-center">${t.p}</td>
-                            <td class="py-2 px-2 text-center text-emerald-500 font-bold">${t.w}</td>
-                            <td class="py-2 px-2 text-center text-amber-500">${t.d}</td>
-                            <td class="py-2 px-2 text-center text-rose-500">${t.l}</td>
-                            <td class="py-2 px-2 text-center font-semibold">${t.gd > 0 ? '+' + t.gd : t.gd}</td>
-                            <td class="py-2 px-2 text-center font-black text-amber-500 bg-amber-500/10 rounded">${t.pts}</td>
-                        </tr>
+            } else {
+                if(badgeState) badgeState.innerText = "চলমান টুর্নামেন্ট";
+                if(titleName) titleName.innerText = `${tourneyData.numTeams} টিম টুর্নামেন্ট (${tourneyData.durationHours} ঘণ্টা স্লট)`;
+                
+                if(actionBtnsContainer && isAdminLoggedIn) {
+                    actionBtnsContainer.innerHTML = `
+                        <div class="flex gap-1.5">
+                            <button onclick="completeAndArchiveTournament()" class="bg-emerald-500 hover:bg-emerald-400 text-black font-bold px-3 py-1.5 rounded-xl text-[11px] transition">
+                                <i class="fa-solid fa-check mr-1"></i> শেষ ও সেভ করুন
+                            </button>
+                            <button onclick="deleteActiveTournament()" class="bg-rose-500/20 text-rose-500 hover:bg-rose-500/30 border border-rose-500/30 font-bold px-3 py-1.5 rounded-xl text-[11px] transition">
+                                <i class="fa-solid fa-trash mr-1"></i> ডিলিট
+                            </button>
+                        </div>
                     `;
-                });
-            }
+                } else if(actionBtnsContainer) {
+                    actionBtnsContainer.innerHTML = '';
+                }
 
-            if(fixturesBox && tourneyData.fixtures) {
-                fixturesBox.innerHTML = '';
-                tourneyData.fixtures.forEach(f => {
-                    let isPlayed = f.scoreA !== null && f.scoreB !== null;
-                    let scoreDisplay = isPlayed ? `<span class="text-amber-400 font-black text-sm">${f.scoreA} - ${f.scoreB}</span>` : `<span class="text-gray-400 italic">এখনো খেলা হয়নি</span>`;
-                    let adminBtn = isAdminLoggedIn ? `<button onclick="updateMatchScore(${f.id})" class="text-[10px] bg-amber-500 hover:bg-amber-400 text-black font-bold px-2 py-1 rounded ml-2">স্কোর দিন</button>` : '';
+                if(summaryCard) {
+                    summaryCard.classList.remove('hidden');
+                    let matchMins = tourneyData.fixtures && tourneyData.fixtures[0] ? tourneyData.fixtures[0].mins : 15;
+                    summaryCard.innerHTML = `
+                        <p class="font-bold text-amber-500"><i class="fa-solid fa-calculator mr-1"></i> টুর্নামেন্ট ডিটেইলস (${tourneyData.durationHours} ঘণ্টার স্লট - تاریخ: ${tourneyData.date || ''}):</p>
+                        <p class="text-gray-300">• মোট ম্যাচ: <b>${tourneyData.fixtures.length}টি</b> | প্রতিটি ম্যাচের সময়: <b>~${matchMins} মিনিট</b></p>
+                    `;
+                }
 
-                    fixturesBox.innerHTML += `
-                        <div class="bg-gray-50 dark:bg-gray-950 border ${f.isFinal ? 'border-amber-500/60 bg-amber-500/5' : 'border-gray-200 dark:border-gray-800'} p-3 rounded-xl flex items-center justify-between">
-                            <div class="space-y-0.5">
-                                <span class="text-[10px] font-bold ${f.isFinal ? 'text-amber-500' : 'text-cyan-500'} block">${f.title} (${f.mins} মিনিট)</span>
-                                <div class="font-bold text-xs flex items-center gap-2">
-                                    <span>${f.teamA}</span>
-                                    <span class="text-gray-500 text-[10px]">VS</span>
-                                    <span>${f.teamB}</span>
+                if(standingsBody && tourneyData.teams) {
+                    let sortedTeams = [...tourneyData.teams].sort((a,b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
+                    standingsBody.innerHTML = '';
+                    sortedTeams.forEach((t, idx) => {
+                        standingsBody.innerHTML += `
+                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-950/50">
+                                <td class="py-2 px-2 font-bold flex items-center gap-1.5">
+                                    <span class="w-4 h-4 rounded-full bg-amber-500/20 text-amber-500 text-[10px] flex items-center justify-center font-bold">${idx + 1}</span>
+                                    ${t.name}
+                                </td>
+                                <td class="py-2 px-2 text-center">${t.p}</td>
+                                <td class="py-2 px-2 text-center text-emerald-500 font-bold">${t.w}</td>
+                                <td class="py-2 px-2 text-center text-amber-500">${t.d}</td>
+                                <td class="py-2 px-2 text-center text-rose-500">${t.l}</td>
+                                <td class="py-2 px-2 text-center font-semibold">${t.gd > 0 ? '+' + t.gd : t.gd}</td>
+                                <td class="py-2 px-2 text-center font-black text-amber-500 bg-amber-500/10 rounded">${t.pts}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                if(fixturesBox && tourneyData.fixtures) {
+                    fixturesBox.innerHTML = '';
+                    tourneyData.fixtures.forEach(f => {
+                        let isPlayed = f.scoreA !== null && f.scoreB !== null;
+                        let scoreDisplay = isPlayed ? `<span class="text-amber-400 font-black text-sm">${f.scoreA} - ${f.scoreB}</span>` : `<span class="text-gray-400 italic">এখনো খেলা হয়নি</span>`;
+                        let adminBtn = isAdminLoggedIn ? `<button onclick="updateMatchScore(${f.id})" class="text-[10px] bg-amber-500 hover:bg-amber-400 text-black font-bold px-2 py-1 rounded ml-2">স্কোর দিন</button>` : '';
+
+                        fixturesBox.innerHTML += `
+                            <div class="bg-gray-50 dark:bg-gray-950 border ${f.isFinal ? 'border-amber-500/60 bg-amber-500/5' : 'border-gray-200 dark:border-gray-800'} p-3 rounded-xl flex items-center justify-between">
+                                <div class="space-y-0.5">
+                                    <span class="text-[10px] font-bold ${f.isFinal ? 'text-amber-500' : 'text-cyan-500'} block">${f.title} (${f.mins} মিনিট)</span>
+                                    <div class="font-bold text-xs flex items-center gap-2">
+                                        <span>${f.teamA}</span>
+                                        <span class="text-gray-500 text-[10px]">VS</span>
+                                        <span>${f.teamB}</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    ${scoreDisplay}
+                                    ${adminBtn}
                                 </div>
                             </div>
-                            <div class="flex items-center">
-                                ${scoreDisplay}
-                                ${adminBtn}
+                        `;
+                    });
+                }
+            }
+
+            // Render Tournament History Archive
+            if(historyBox) {
+                let historyKeys = Object.keys(tourneyHistoryData);
+                historyBox.innerHTML = historyKeys.length ? '' : '<p class="text-gray-400 italic">পূর্ববর্তী কোনো টুর্নামেন্টের রেকর্ড নেই।</p>';
+                historyKeys.reverse().forEach(hk => {
+                    let hObj = tourneyHistoryData[hk];
+                    let topTeam = hObj.teams ? [...hObj.teams].sort((a,b) => b.pts - a.pts)[0] : null;
+                    historyBox.innerHTML += `
+                        <div class="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-3 rounded-xl flex justify-between items-center">
+                            <div>
+                                <span class="text-[10px] text-gray-400 block">${hObj.date || 'তারিখ নেই'} (${hObj.durationHours} ঘণ্টা স্লট)</span>
+                                <h4 class="font-bold text-xs text-amber-500">${hObj.numTeams} টিম টুর্নামেন্ট</h4>
+                                <p class="text-[11px] text-gray-300 mt-0.5">চ্যাম্পিয়ন: <b>${topTeam ? topTeam.name : 'N/A'}</b></p>
                             </div>
+                            <span class="bg-purple-500/20 text-purple-400 border border-purple-500/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">সম্পন্ন (Completed)</span>
                         </div>
                     `;
                 });
             }
+        }
+
+        /* --- PLAYER ACHIEVEMENTS SYSTEM --- */
+        function getPlayerAchievements(goals, assists, motm, matches) {
+            let badges = [];
+            if(goals >= 10) badges.push(`<span class="bg-amber-500/20 text-amber-500 border border-amber-500/30 px-2 py-0.5 rounded-full text-[10px] font-bold"><i class="fa-solid fa-shoe-prints mr-1"></i>10+ গোল</span>`);
+            if(assists >= 10) badges.push(`<span class="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded-full text-[10px] font-bold"><i class="fa-solid fa-bullseye mr-1"></i>10+ অ্যাসিস্ট</span>`);
+            if(motm >= 5) badges.push(`<span class="bg-purple-500/20 text-purple-400 border border-purple-500/30 px-2 py-0.5 rounded-full text-[10px] font-bold"><i class="fa-solid fa-star mr-1"></i>৫x মোম</span>`);
+            if(matches >= 15) badges.push(`<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded-full text-[10px] font-bold"><i class="fa-solid fa-medal mr-1"></i>ভেটারান প্লেয়ার</span>`);
+            return badges.length ? badges.join('') : '<span class="text-[10px] text-gray-400 italic">এখনো কোনো মেডেল অর্জন হয়নি</span>';
         }
 
         /* --- STANDARD APP LOGIC --- */
@@ -1008,6 +1109,9 @@
             document.getElementById('modalAssists').innerText = p.assists || 0;
             document.getElementById('modalMotm').innerText = p.motm || 0;
             document.getElementById('modalPhoto').src = p.photo;
+
+            // Render Achievements
+            document.getElementById('modalAchievementsContainer').innerHTML = getPlayerAchievements(p.goals || 0, p.assists || 0, p.motm || 0, p.matchesPlayed || 0);
 
             const pinChangeBox = document.getElementById('pinChangeContainer');
             if(currentLoggedInPlayerId === id) {

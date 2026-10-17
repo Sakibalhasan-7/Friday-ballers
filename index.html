@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friday Football Club - FFC Ultimate Complete Suite</title>
+    <title>Friday Football Club - FFC Ultimate Complete Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -18,19 +18,19 @@
 </head>
 <body class="min-h-screen pb-28 bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-200">
 
-    <!-- Player Secure Login Modal -->
+    <!-- Player Secure Login / Visitor Modal -->
     <div id="loginModal" class="fixed inset-0 bg-black/95 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 w-full max-w-sm rounded-2xl p-6 shadow-2xl space-y-4">
             <div class="text-center space-y-1">
                 <span class="bg-emerald-500 text-black px-3 py-1 rounded-xl font-black text-sm">FFC</span>
                 <h2 class="text-lg font-bold mt-2">ফুটবল ক্লাবে স্বাগতম</h2>
-                <p class="text-xs text-gray-500 dark:text-gray-400">আপনার নাম সিলেক্ট করুন এবং পিন দিন</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">আপনার আইডি সিলেক্ট করুন এবং গোপন পিন দিন</p>
             </div>
             <div class="space-y-3 relative z-50">
                 <div>
-                    <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">প্লেয়ার সিলেক্ট করুন:</label>
+                    <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">আপনার নাম সিলেক্ট করুন:</label>
                     <select id="loginPlayerSelect" class="w-full bg-gray-100 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-xl px-3 py-2.5 text-xs font-bold relative z-50">
-                        <option value="">-- প্লেয়ার লোড হচ্ছে --</option>
+                        <option value="">-- প্লেয়ার সিলেক্ট করুন --</option>
                     </select>
                 </div>
                 <div>
@@ -111,7 +111,7 @@
                 <i class="fa-solid fa-bullhorn"></i> নোটিশ
             </div>
             <div class="overflow-hidden whitespace-nowrap w-full">
-                <p id="noticeTextContent" class="text-xs text-emerald-700 dark:text-emerald-300 font-bold">আগামী শুক্রবার বিকেল ৪টায় ম্যাচ!</p>
+                <p id="noticeTextContent" class="text-xs text-emerald-700 dark:text-emerald-300 font-bold">আগামী শুক্রবার বিকেল ৪টায় ৫v৫ রোমাঞ্চকর ম্যাচ অনুষ্ঠিত হবে!</p>
             </div>
         </div>
 
@@ -161,6 +161,26 @@
                     </table>
                 </div>
             </section>
+
+            <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                    <h2 class="text-sm font-bold text-emerald-600 dark:text-emerald-400"><i class="fa-solid fa-clipboard-user mr-1"></i> উপস্থিতি (RSVP)</h2>
+                    <span id="attendingCount" class="text-xs bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 px-2.5 py-0.5 rounded-full font-bold">০ জন</span>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="toggleAttendance(true)" class="flex-1 bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2 rounded-xl text-xs transition">খেলব (Playing)</button>
+                    <button onclick="toggleAttendance(false)" class="flex-1 bg-rose-500/20 hover:bg-rose-500/30 text-rose-500 font-bold py-2 rounded-xl text-xs border border-rose-500/30 transition">খেলব না</button>
+                </div>
+                <div id="attendingListContainer" class="flex flex-wrap gap-1.5 pt-2"></div>
+            </section>
+
+            <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
+                    <h2 class="text-sm font-bold text-amber-600 dark:text-amber-400"><i class="fa-solid fa-wallet mr-1"></i> চাঁদা ট্র্যাকার</h2>
+                    <span id="feeSummaryBadge" class="text-[11px] bg-amber-500/20 text-amber-600 dark:text-amber-300 px-2.5 py-1 rounded-xl font-bold border border-amber-500/30">হিসাব...</span>
+                </div>
+                <div id="feeTrackerGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 pt-1"></div>
+            </section>
         </div>
 
         <!-- TAB 2: SQUAD -->
@@ -196,7 +216,7 @@
             </section>
         </div>
 
-        <!-- TAB 4: TOURNAMENT (3-TEAM GROUP STAGE & ROADMAP PLAYOFF) -->
+        <!-- TAB 4: TOURNAMENT (3-TEAM GROUP STAGE + PLAYOFF ROADMAP) -->
         <div id="tournamentTab" class="tab-content hidden space-y-6">
             <div id="tourneyStatusBanner" class="bg-gradient-to-r from-amber-900/20 via-amber-950/10 to-transparent border border-amber-500/40 rounded-2xl p-4 shadow-md flex justify-between items-center">
                 <div class="space-y-1">
@@ -260,6 +280,12 @@
                 <h2 class="text-sm font-bold text-cyan-500 border-b border-gray-200 dark:border-gray-800 pb-2"><i class="fa-solid fa-calendar-check mr-1"></i> গ্রুপ ম্যাচ ফিক্সচার ও স্কোর ইনপুট</h2>
                 <div id="tourneyFixturesList" class="space-y-3 text-xs"></div>
             </section>
+
+            <!-- Tournament History Archive -->
+            <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
+                <h2 class="text-sm font-bold text-purple-500 border-b border-gray-200 dark:border-gray-800 pb-2"><i class="fa-solid fa-clock-rotate-left mr-1"></i> টুর্নামেন্ট হিস্ট্রি (Archive)</h2>
+                <div id="tourneyHistoryContainer" class="space-y-2 text-xs"></div>
+            </section>
         </div>
 
         <!-- TAB 5: MATCHES -->
@@ -292,8 +318,11 @@
                 <img id="modalPhoto" src="" class="w-20 h-20 rounded-full mx-auto object-cover border-4 border-emerald-500 shadow-lg" onerror="this.src='https://ui-avatars.com/api/?background=10b981&color=000&name=FFC'">
                 <h3 id="modalName" class="text-base font-bold"></h3>
                 <span id="modalPos" class="text-xs bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 px-2 py-0.5 rounded-full"></span>
+                <p id="modalDesc" class="text-xs text-gray-500 dark:text-gray-400 italic pt-1"></p>
             </div>
             
+            <div id="modalUnlockedSummaryBadges" class="flex flex-wrap justify-center gap-1 pt-1"></div>
+
             <!-- ADMIN EXCLUSIVE BADGE ASSIGNMENT OPTION -->
             <div id="adminExclusiveBadgeBox" class="hidden border-t border-gray-200 dark:border-gray-800 pt-3 space-y-2">
                 <p class="text-xs font-bold text-amber-500"><i class="fa-solid fa-shield-halved mr-1"></i> প্লেয়ারকে এচিভমেন্ট/ব্যাজ প্রদান করুন:</p>
@@ -331,12 +360,18 @@
         const dbRefMatches = firebase.database().ref('ffc_matches_v6');
         const dbRefNotice = firebase.database().ref('ffc_notice_v6');
         const dbRefChat = firebase.database().ref('ffc_chat_v6');
+        const dbRefAttendance = firebase.database().ref('ffc_attendance_v6');
+        const dbRefFees = firebase.database().ref('ffc_fees_v6');
         const dbRefTourney = firebase.database().ref('ffc_tourney_v6');
+        const dbRefTourneyHistory = firebase.database().ref('ffc_tourney_history_v6');
 
         let isAdminLoggedIn = false;
         let playersData = {};
         let matchesData = {};
+        let attendanceData = {};
+        let feesData = {};
         let tourneyData = {};
+        let tourneyHistoryData = {};
         let currentLoggedInUser = localStorage.getItem('ffc_current_user') || "";
         let currentLoggedInPlayerId = localStorage.getItem('ffc_current_player_id') || "";
         let activeModalPlayerId = "";
@@ -378,14 +413,17 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        dbRefPlayers.on('value', snapshot => { playersData = snapshot.val() || {}; renderApp(); populateLoginDropdown(); renderAllAchievementsGallery(); });
+        dbRefPlayers.on('value', snapshot => { playersData = snapshot.val() || {}; renderApp(); populateLoginDropdown(); renderFeeTracker(); renderAllAchievementsGallery(); });
         dbRefMatches.on('value', snapshot => { matchesData = snapshot.val() || {}; renderMatchesHistory(matchesData); });
         dbRefNotice.on('value', snapshot => {
             const notice = snapshot.val();
             if(notice && notice.text) document.getElementById('noticeTextContent').innerText = notice.text;
         });
         dbRefChat.on('value', snapshot => { renderChatMessages(snapshot.val() || {}); });
+        dbRefAttendance.on('value', snapshot => { attendanceData = snapshot.val() || {}; renderAttendanceList(); });
+        dbRefFees.on('value', snapshot => { feesData = snapshot.val() || {}; renderFeeTracker(); });
         dbRefTourney.on('value', snapshot => { tourneyData = snapshot.val() || {}; renderTournamentUI(); });
+        dbRefTourneyHistory.on('value', snapshot => { tourneyHistoryData = snapshot.val() || {}; renderTournamentUI(); });
 
         document.getElementById('chatForm').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -450,7 +488,7 @@
                 localStorage.setItem('ffc_current_player_id', currentLoggedInPlayerId);
                 document.getElementById('loginModal').classList.add('hidden');
                 document.getElementById('loginPlayerPin').value = '';
-                updateUserBadge(); renderAllAchievementsGallery();
+                updateUserBadge(); renderFeeTracker(); renderAllAchievementsGallery();
                 alert(`স্বাগতম, ${currentLoggedInUser}!`);
             } else {
                 alert("ভুল পিন (PIN)!");
@@ -462,7 +500,7 @@
             localStorage.setItem('ffc_current_user', currentLoggedInUser);
             localStorage.setItem('ffc_current_player_id', "");
             document.getElementById('loginModal').classList.add('hidden');
-            updateUserBadge(); renderAllAchievementsGallery();
+            updateUserBadge(); renderFeeTracker(); renderAllAchievementsGallery();
         }
 
         function updateUserBadge() {
@@ -582,6 +620,7 @@
             const pointsSection = document.getElementById('tourneyPointsSection');
             const standingsBody = document.getElementById('tourneyStandingsRows');
             const fixturesBox = document.getElementById('tourneyFixturesList');
+            const historyBox = document.getElementById('tourneyHistoryContainer');
             const actionBtnsContainer = document.getElementById('tourneyActionBtnsContainer');
             const badgeState = document.getElementById('tourneyBadgeState');
             const titleName = document.getElementById('tourneyTitleName');
@@ -603,7 +642,8 @@
 
                 if(actionBtnsContainer && isAdminLoggedIn) {
                     actionBtnsContainer.innerHTML = `
-                        <button onclick="deleteActiveTournament()" class="bg-rose-500/20 text-rose-500 font-bold px-2.5 py-1 rounded-lg text-xs border border-rose-500/30">ডিলিট টুর্নামেন্ট</button>
+                        <button onclick="completeAndArchiveTournament()" class="bg-emerald-500 text-black font-bold px-2 py-1 rounded text-xs mr-1">শেষ করুন</button>
+                        <button onclick="deleteActiveTournament()" class="bg-rose-500/20 text-rose-500 font-bold px-2 py-1 rounded text-xs border border-rose-500/30">ডিলিট</button>
                     `;
                 }
 
@@ -671,11 +711,40 @@
                     });
                 }
             }
+
+            if(historyBox) {
+                let historyKeys = Object.keys(tourneyHistoryData);
+                historyBox.innerHTML = historyKeys.length ? '' : '<p class="text-gray-400 italic text-xs">কোনো আর্কাইভ নেই</p>';
+                historyKeys.reverse().forEach(hk => {
+                    let hObj = tourneyHistoryData[hk];
+                    let deleteBtn = isAdminLoggedIn ? `<button onclick="deleteTourneyHistoryItem('${hk}')" class="text-rose-500 text-xs ml-2"><i class="fa-solid fa-trash"></i></button>` : '';
+                    historyBox.innerHTML += `
+                        <div class="bg-gray-50 dark:bg-gray-950 border p-2.5 rounded-xl flex justify-between items-center text-xs">
+                            <div><span class="text-[10px] text-gray-400">${hObj.date || ''}</span><h4 class="font-bold text-amber-500">${hObj.name || 'Tournament'}</h4></div>
+                            <div class="flex items-center"><span class="bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded text-[10px]">Archived</span>${deleteBtn}</div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        window.completeAndArchiveTournament = function() {
+            if(!isAdminLoggedIn) return;
+            if(confirm("টুর্নামেন্ট শেষ করে আর্কাইভে সেভ করতে চান?")) {
+                dbRefTourneyHistory.push(tourneyData);
+                dbRefTourney.remove();
+                alert("আর্কাইভ করা হয়েছে!");
+            }
         }
 
         window.deleteActiveTournament = function() {
             if(!isAdminLoggedIn) return;
             if(confirm("টুর্নামেন্ট মুছে ফেলতে চান?")) dbRefTourney.remove();
+        }
+
+        window.deleteTourneyHistoryItem = function(historyId) {
+            if(!isAdminLoggedIn) return;
+            if(confirm("হিস্ট্রি মুছে ফেলতে চান?")) dbRefTourneyHistory.child(historyId).remove();
         }
 
         /* --- 42 ACHIEVEMENTS CONFIGURATION --- */
@@ -791,6 +860,43 @@
             document.getElementById('squadMainView').classList.remove('hidden');
         }
 
+        window.toggleAttendance = function(isAttending) {
+            if(!currentLoggedInPlayerId) return openLoginModal();
+            dbRefAttendance.child(currentLoggedInPlayerId).set({
+                name: currentLoggedInUser,
+                status: isAttending ? "Playing" : "Not Playing",
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            });
+        }
+
+        function renderAttendanceList() {
+            const container = document.getElementById('attendingListContainer');
+            const countBadge = document.getElementById('attendingCount');
+            let keys = Object.keys(attendanceData);
+            let playingList = keys.filter(k => attendanceData[k].status === "Playing").map(k => attendanceData[k].name);
+            if(countBadge) countBadge.innerText = `${playingList.length} জন`;
+            if(container) {
+                container.innerHTML = playingList.map(n => `<span class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2 py-0.5 rounded text-[11px] font-semibold">${n}</span>`).join('');
+            }
+        }
+
+        function renderFeeTracker() {
+            const grid = document.getElementById('feeTrackerGrid');
+            let playerKeys = Object.keys(playersData);
+            if(grid) {
+                grid.innerHTML = playerKeys.map(k => {
+                    let p = playersData[k];
+                    let status = feesData[k] || "Due";
+                    return `
+                        <div class="bg-gray-50 dark:bg-gray-950 border p-2 rounded-xl flex items-center justify-between text-xs">
+                            <span class="font-bold">${p.name}</span>
+                            <span class="${status === 'Paid' ? 'text-emerald-500' : 'text-rose-500'} font-bold">${status}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
         function renderApp() {
             const grid = document.getElementById('playersCardGrid');
             const tbody = document.getElementById('leaderboardRows');
@@ -828,7 +934,7 @@
             grid.innerHTML = keys.length ? keys.map(k => {
                 let m = matchesObj[k];
                 return `
-                    <div class="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 p-3 rounded-xl flex justify-between items-center text-xs">
+                    <div class="bg-gray-50 dark:bg-gray-950 border p-3 rounded-xl flex justify-between items-center text-xs">
                         <div>
                             <span class="text-[10px] text-cyan-500 font-bold">${m.date || ''}</span>
                             <h4 class="font-bold text-sm">${m.title}</h4>

@@ -267,14 +267,14 @@
             </section>
         </div>
 
-        <!-- TAB 3: TOURNAMENT TAB (NEW FEATURE) -->
+        <!-- TAB 3: TOURNAMENT TAB (Restricted to Admin Only for Generation) -->
         <div id="tournamentTab" class="tab-content hidden space-y-6">
-            <!-- Smart Tournament Generator Form -->
-            <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-4">
+            <!-- Smart Tournament Generator Form (Admin Only) -->
+            <section id="tourneyAdminControlBox" class="hidden bg-white dark:bg-gray-900 border-2 border-amber-500/50 rounded-2xl p-4 shadow-xl space-y-4">
                 <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
                     <div>
-                        <h2 class="text-sm font-bold text-amber-500"><i class="fa-solid fa-trophy mr-1"></i> স্মার্ট টার্ফ টুর্নামেন্ট অ্যালগরিদম</h2>
-                        <p class="text-[10px] text-gray-400">৩ বা ৪ টিমের জন্য সময় অনুযায়ী অটোমেটিক ফিক্সচার ও ম্যাচের সময় ক্যালকুলেটর</p>
+                        <h2 class="text-sm font-bold text-amber-500"><i class="fa-solid fa-shield-halved mr-1"></i> টুর্নামেন্ট হোস্ট প্যানেল (অ্যাডমিন অনলি)</h2>
+                        <p class="text-[10px] text-gray-400">৩ বা ৪ টিমের জন্য সময় অনুযায়ী অটোমেটিক ফিক্সচার ও ম্যাচের সময় জেনারেটর</p>
                     </div>
                 </div>
 
@@ -295,21 +295,22 @@
                     </div>
                     <div class="flex items-end">
                         <button onclick="generateSmartTournamentSchedule()" class="w-full bg-amber-500 hover:bg-amber-400 text-black font-bold py-2 rounded-xl text-xs transition flex items-center justify-center gap-1">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i> অ্যালগরিদম রান করুন
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> নতুন টুর্নামেন্ট জেনারেট করুন
                         </button>
                     </div>
                 </div>
-
-                <div id="algorithmSummaryCard" class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs space-y-1.5 hidden">
-                    <!-- Algorithm Calc Result -->
-                </div>
             </section>
+
+            <!-- Algorithm Summary -->
+            <div id="algorithmSummaryCard" class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 text-xs space-y-1.5 hidden shadow-md">
+                <!-- Algorithm Calc Result -->
+            </div>
 
             <!-- Live Points Table -->
             <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
                 <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-2">
                     <h2 class="text-sm font-bold text-emerald-500"><i class="fa-solid fa-list-ol mr-1"></i> টুর্নামেন্ট পয়েন্ট টেবিল (Standings)</h2>
-                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold">লাইব আপডেট</span>
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold">লাইভ আপডেট</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs">
@@ -325,7 +326,7 @@
                             </tr>
                         </thead>
                         <tbody id="tourneyStandingsRows" class="divide-y divide-gray-200 dark:divide-gray-800">
-                            <tr><td colspan="7" class="text-center py-4 text-gray-400">উপরে অ্যালগরিদম রান করে টুর্নামেন্ট স্টার্ট করুন</td></tr>
+                            <tr><td colspan="7" class="text-center py-4 text-gray-400">চলমান কোনো টুর্নামেন্ট ডাটা নেই</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -335,7 +336,7 @@
             <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
                 <h2 class="text-sm font-bold text-cyan-500"><i class="fa-solid fa-calendar-check mr-1"></i> টুর্নামেন্ট ফিক্সচার ও ম্যাচ স্কোর</h2>
                 <div id="tourneyFixturesList" class="space-y-3 text-xs">
-                    <p class="text-gray-400 text-center py-4">ফিক্সচার তৈরি করতে ওপর থেকে অ্যালগরিদম রান করুন।</p>
+                    <p class="text-gray-400 text-center py-4">কোনো ফিক্সচার তৈরি করা হয়নি।</p>
                 </div>
             </section>
         </div>
@@ -615,8 +616,13 @@
             }
         }
 
-        /* --- TOURNAMENT SMART ALGORITHM & LOGIC --- */
+        /* --- TOURNAMENT SMART ALGORITHM & LOGIC (ADMIN ONLY) --- */
         window.generateSmartTournamentSchedule = function() {
+            if(!isAdminLoggedIn) {
+                alert("শুধুমাত্র অ্যাডমিন নতুন টুর্নামেন্ট জেনারেট করতে পারবেন!");
+                return;
+            }
+
             let numTeams = parseInt(document.getElementById('tourneyTeamsCount').value);
             let durationHours = parseInt(document.getElementById('tourneyDuration').value);
             let totalMins = durationHours * 60;
@@ -630,8 +636,7 @@
                     { name: "Team Blue (টিম বি)", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
                     { name: "Team Green (টিম সি)", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 }
                 ];
-                // 3 Teams Double Round-Robin (6 League Matches + 1 Final = 7 Matches)
-                let playMins = Math.floor((totalMins - 20) / 7); // 20 mins total break/prep
+                let playMins = Math.floor((totalMins - 20) / 7);
                 
                 fixtures = [
                     { id: 1, title: "ম্যাচ ১ (লিগ)", teamA: "Team Red", teamB: "Team Blue", scoreA: null, scoreB: null, mins: playMins },
@@ -649,7 +654,6 @@
                     { name: "Team Green", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 },
                     { name: "Team Yellow", p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 }
                 ];
-                // 4 Teams Knockout Format (2 Semi-Finals, 3rd Place Match, Grand Final = 4 Matches)
                 let playMins = Math.floor((totalMins - 20) / 4);
 
                 fixtures = [
@@ -668,7 +672,7 @@
             };
 
             dbRefTourney.set(newTourney);
-            alert("স্মার্ট এলগরিদম সফলভাবে ফিক্সচার ও ম্যাচের সময় জেনারেট করেছে!");
+            alert("অ্যাডমিন হিসেবে স্মার্ট এলগরিদম সফলভাবে টুর্নামেন্ট শিডিউল তৈরি করেছে!");
         }
 
         window.updateMatchScore = function(fixtureId) {
@@ -690,7 +694,6 @@
                 updatedFixtures[matchIndex].scoreB = scoreB;
             }
 
-            // Recalculate Standings / Points Table
             let updatedTeams = tourneyData.teams.map(t => ({ ...t, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0 }));
 
             updatedFixtures.forEach(f => {
@@ -733,29 +736,36 @@
         }
 
         function renderTournamentUI() {
+            const adminControlBox = document.getElementById('tourneyAdminControlBox');
             const summaryCard = document.getElementById('algorithmSummaryCard');
             const standingsBody = document.getElementById('tourneyStandingsRows');
             const fixturesBox = document.getElementById('tourneyFixturesList');
 
+            // Toggle Admin Host Form visibility based on login state
+            if(adminControlBox) {
+                if(isAdminLoggedIn) {
+                    adminControlBox.classList.remove('hidden');
+                } else {
+                    adminControlBox.classList.add('hidden');
+                }
+            }
+
             if(!tourneyData.numTeams) {
                 if(summaryCard) summaryCard.classList.add('hidden');
-                if(standingsBody) standingsBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-400">উপরে অ্যালগরিদম রান করে টুর্নামেন্ট স্টার্ট করুন</td></tr>';
-                if(fixturesBox) fixturesBox.innerHTML = '<p class="text-gray-400 text-center py-4">ফিক্সচার তৈরি করতে ওপর থেকে অ্যালগরিদম রান করুন।</p>';
+                if(standingsBody) standingsBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-400">চলমান কোনো টুর্নামেন্ট ডাটা নেই</td></tr>';
+                if(fixturesBox) fixturesBox.innerHTML = '<p class="text-gray-400 text-center py-4">কোনো ফিক্সচার তৈরি করা হয়নি।</p>';
                 return;
             }
 
-            // Algorithm summary
             if(summaryCard) {
                 summaryCard.classList.remove('hidden');
                 let matchMins = tourneyData.fixtures && tourneyData.fixtures[0] ? tourneyData.fixtures[0].mins : 15;
                 summaryCard.innerHTML = `
-                    <p class="font-bold text-amber-500"><i class="fa-solid fa-calculator mr-1"></i> এলগরিদম সামারি (${tourneyData.durationHours} ঘণ্টার স্লট - ${tourneyData.numTeams} টিম):</p>
+                    <p class="font-bold text-amber-500"><i class="fa-solid fa-calculator mr-1"></i> টুর্নামেন্ট ডিটেইলস (${tourneyData.durationHours} ঘণ্টার স্লট - ${tourneyData.numTeams} টিম):</p>
                     <p class="text-gray-300">• মোট ম্যাচ: <b>${tourneyData.fixtures.length}টি</b> | প্রতিটি ম্যাচের সময়: <b>~${matchMins} মিনিট</b></p>
-                    <p class="text-gray-300">• ব্রেক ও ওয়ার্মআপ সময়: <b>১৫-২০ মিনিট</b> (পয়েন্ট টেবিলের শীর্ষ ২ টিম ফাইনালে মুখোমুখি হবে)</p>
                 `;
             }
 
-            // Standings Table
             if(standingsBody && tourneyData.teams) {
                 let sortedTeams = [...tourneyData.teams].sort((a,b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf);
                 standingsBody.innerHTML = '';
@@ -777,7 +787,6 @@
                 });
             }
 
-            // Fixtures Render
             if(fixturesBox && tourneyData.fixtures) {
                 fixturesBox.innerHTML = '';
                 tourneyData.fixtures.forEach(f => {

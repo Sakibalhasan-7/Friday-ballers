@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Friday Football Club - Ultimate Safe Edition</title>
+    <title>Friday Football Club - Ultimate Complete Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -111,7 +111,7 @@
                 <i class="fa-solid fa-bullhorn"></i> নোটিশ
             </div>
             <div class="overflow-hidden whitespace-nowrap w-full">
-                <p id="noticeTextContent" class="text-xs text-emerald-700 dark:text-emerald-300 font-bold">আগামী শুক্রবার বিকেল ৪টায় ৫v৫ ম্যাচ!</p>
+                <p id="noticeTextContent" class="text-xs text-emerald-700 dark:text-emerald-300 font-bold">আগামী শুক্রবার বিকেল ৪টায় ম্যাচ!</p>
             </div>
         </div>
 
@@ -169,18 +169,24 @@
             </div>
         </div>
 
-        <!-- TAB 3: ACHIEVEMENTS -->
+        <!-- TAB 3: ACHIEVEMENTS (40+) -->
         <div id="achievementsTab" class="tab-content hidden space-y-6">
             <section class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-xl space-y-4">
                 <div class="flex justify-between items-center border-b border-gray-200 dark:border-gray-800 pb-3">
                     <h2 class="text-base font-bold text-amber-500"><i class="fa-solid fa-award mr-1.5"></i> ক্লাবের সকল ৪০+ অ্যাচিভমেন্ট গ্যালারি</h2>
                     <span id="userAchievementCountBadge" class="bg-amber-500/20 text-amber-500 border border-amber-500/30 px-3 py-1 rounded-xl text-xs font-bold">আনলকড: 0/40</span>
                 </div>
+                <div class="flex gap-2 text-xs font-bold border-b border-gray-200 dark:border-gray-800 pb-3">
+                    <button onclick="filterAchievementGallery('all')" class="ach-filter-btn px-3 py-1 rounded-lg bg-amber-500 text-black">সবগুলো (All)</button>
+                    <button onclick="filterAchievementGallery('Bronze')" class="ach-filter-btn px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400">🥉 Bronze</button>
+                    <button onclick="filterAchievementGallery('Gold')" class="ach-filter-btn px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400">🥇 Gold</button>
+                    <button onclick="filterAchievementGallery('Elite')" class="ach-filter-btn px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400">💎 Elite</button>
+                </div>
                 <div id="allAchievementsGalleryGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 pt-2"></div>
             </section>
         </div>
 
-        <!-- TAB 4: TOURNAMENT (FLEXIBLE MANUAL & AUTOMATIC GROUP + ROADMAP) -->
+        <!-- TAB 4: TOURNAMENT (MANUAL + AUTO POINTS + SEMI/FINAL ROADMAP) -->
         <div id="tournamentTab" class="tab-content hidden space-y-6">
             
             <div id="tourneyStatusBanner" class="bg-gradient-to-r from-amber-900/20 via-amber-950/10 to-transparent border border-amber-500/40 rounded-2xl p-4 shadow-md flex justify-between items-center">
@@ -229,11 +235,11 @@
                 </button>
             </section>
 
-            <!-- Group Points Standings Table with Manual Point Edit Support -->
+            <!-- Group Points Standings Table with Manual Point Edit -->
             <section id="tourneyPointsSection" class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-xl space-y-3">
                 <div class="flex justify-between items-center">
                     <h2 class="text-sm font-bold text-emerald-500"><i class="fa-solid fa-list-ol mr-1"></i> গ্রুপ স্টেজের পয়েন্ট টেবিল (Manual & Auto)</h2>
-                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold">পয়েন্ট এডিট করা যাবে</span>
+                    <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded font-bold">পয়েন্ট ও জিডি এডিট করা যাবে</span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs">
@@ -304,6 +310,20 @@
                 <h3 id="modalName" class="text-base font-bold"></h3>
                 <span id="modalPos" class="text-xs bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800 px-2 py-0.5 rounded-full"></span>
             </div>
+            
+            <div id="adminExclusiveBadgeBox" class="hidden border-t border-gray-200 dark:border-gray-800 pt-3 space-y-2">
+                <p class="text-xs font-bold text-amber-500">স্পেশাল ব্যাজ প্রদান করুন:</p>
+                <div class="flex gap-2">
+                    <select id="adminCustomBadgeSelect" class="flex-1 bg-gray-50 dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-1 text-xs">
+                        <option value="Iron Man">Iron Man</option>
+                        <option value="Captain Fantastic">Captain Fantastic</option>
+                        <option value="Hall of Fame">Hall of Fame</option>
+                        <option value="Sub-Hero">Sub-Hero</option>
+                    </select>
+                    <button onclick="giveAdminExclusiveBadge()" class="bg-amber-500 text-black font-bold px-3 py-1 rounded-lg text-xs">প্রদান</button>
+                </div>
+            </div>
+
             <div class="pt-2 text-center">
                 <button id="modalFullDetailsBtn" onclick="" class="w-full bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-2 rounded-xl text-xs transition">ফুল প্রোফাইল দেখুন</button>
             </div>
@@ -337,6 +357,8 @@
         let tourneyHistoryData = {};
         let currentLoggedInUser = localStorage.getItem('ffc_current_user') || "";
         let currentLoggedInPlayerId = localStorage.getItem('ffc_current_player_id') || "";
+        let activeModalPlayerId = "";
+        let selectedFilterTier = 'all';
 
         function toggleTheme() {
             const html = document.documentElement;
@@ -375,7 +397,7 @@
         }
 
         // Firebase Listeners
-        dbRefPlayers.on('value', snapshot => { playersData = snapshot.val() || {}; renderApp(); populateLoginDropdown(); });
+        dbRefPlayers.on('value', snapshot => { playersData = snapshot.val() || {}; renderApp(); populateLoginDropdown(); renderAllAchievementsGallery(); });
         dbRefMatches.on('value', snapshot => { renderMatchesHistory(snapshot.val() || {}); });
         dbRefNotice.on('value', snapshot => {
             const notice = snapshot.val();
@@ -472,6 +494,7 @@
                 document.getElementById('adminBtnText').innerText = "অ্যাডমিন";
                 document.getElementById('lockIcon').className = "fa-solid fa-lock mr-1";
                 renderTournamentUI();
+                renderApp();
                 return;
             }
             let pin = prompt("অ্যাডমিন পাসওয়ার্ড দিন:");
@@ -481,10 +504,11 @@
                 document.getElementById('adminBtnText').innerText = "লগআউট";
                 document.getElementById('lockIcon').className = "fa-solid fa-unlock mr-1 text-emerald-500";
                 renderTournamentUI();
+                renderApp();
             } else if (pin !== null) alert("ভুল পাসওয়ার্ড!");
         }
 
-        /* --- FLEXIBLE TOURNAMENT ENGINE (MANUAL + AUTO POINTS + SEMI/FINAL) --- */
+        /* --- FLEXIBLE TOURNAMENT ENGINE --- */
         window.generateCustomGroupRoadmapTournament = function() {
             if(!isAdminLoggedIn) return alert("শুধুমাত্র অ্যাডমিন টুর্নামেন্ট শুরু করতে পারবেন!");
 
@@ -504,7 +528,7 @@
                 { id: 1, title: "গ্রুপ ম্যাচ ১", teamA: name1, teamB: name2, scoreA: null, scoreB: null, stage: "group" },
                 { id: 2, title: "গ্রুপ ম্যাচ ২", teamA: name2, teamB: name3, scoreA: null, scoreB: null, stage: "group" },
                 { id: 3, title: "গ্রুপ ম্যাচ ৩", teamA: name3, teamB: name1, scoreA: null, scoreB: null, stage: "group" },
-                { id: 4, title: "⚡ সেমি-ফাইনাল (2nd vs 3rd Rank)", teamA: "2nd Rank Team", teamB: "3rd Rank Team", scoreA: null, scoreB: null, stage: "sf" },
+                { id: 4, title: "⚡ সেমি-ফাইনাল (2nd vs 3rd)", teamA: "2nd Rank Team", teamB: "3rd Rank Team", scoreA: null, scoreB: null, stage: "sf" },
                 { id: 5, title: "🏆 গ্র্যান্ড ফাইনাল", teamA: "1st Rank Team", teamB: "Winner SF", scoreA: null, scoreB: null, stage: "final" }
             ];
 
@@ -520,15 +544,14 @@
 
         window.updateManualTeamPoints = function(teamIndex) {
             if(!isAdminLoggedIn) return;
-            let newPts = prompt("টিমের নতুন পয়েন্ট দিন:", tourneyData.teams[teamIndex].pts || 0);
+            let newPts = prompt("টিমের পয়েন্ট দিন:", tourneyData.teams[teamIndex].pts || 0);
             if(newPts === null) return;
-            let newGd = prompt("টিমের নতুন গোল ডিফারেন্স (GD) দিন:", tourneyData.teams[teamIndex].gd || 0);
+            let newGd = prompt("টিমের গোল ডিফারেন্স (GD) দিন:", tourneyData.teams[teamIndex].gd || 0);
             if(newGd === null) return;
 
             tourneyData.teams[teamIndex].pts = parseInt(newPts) || 0;
             tourneyData.teams[teamIndex].gd = parseInt(newGd) || 0;
 
-            // Auto sort and update Playoffs
             updatePlayoffProgressionFromTeams();
             dbRefTourney.set(tourneyData);
         }
@@ -545,7 +568,6 @@
                 fixture.scoreA = parseInt(scoreA) || 0;
                 fixture.scoreB = parseInt(scoreB) || 0;
 
-                // If group match, recalculate standings
                 if(fixture.stage === "group") {
                     let tA = tourneyData.teams.find(t => t.name === fixture.teamA);
                     let tB = tourneyData.teams.find(t => t.name === fixture.teamB);
@@ -572,13 +594,8 @@
             let sfMatch = tourneyData.fixtures.find(f => f.stage === "sf");
             let finalMatch = tourneyData.fixtures.find(f => f.stage === "final");
 
-            if(sfMatch) {
-                sfMatch.teamA = top2;
-                sfMatch.teamB = top3;
-            }
-            if(finalMatch) {
-                finalMatch.teamA = top1;
-            }
+            if(sfMatch) { sfMatch.teamA = top2; sfMatch.teamB = top3; }
+            if(finalMatch) { finalMatch.teamA = top1; }
 
             if(sfMatch && sfMatch.scoreA !== null && sfMatch.scoreB !== null) {
                 let winnerSF = sfMatch.scoreA >= sfMatch.scoreB ? sfMatch.teamA : sfMatch.teamB;
@@ -608,7 +625,7 @@
                 if(roadmapSection) roadmapSection.classList.add('hidden');
                 if(pointsSection) pointsSection.classList.add('hidden');
                 if(badgeState) badgeState.innerText = "কোনো টুর্নামেন্ট নেই";
-                if(titleName) titleName.innerText = "বর্তমানে কোনো টুর্নামেন্ট নেই";
+                if(titleName) titleName.innerText = "বর্তমানে কোনো টুর্নামেন্ট চলছে না";
                 if(actionBtnsContainer) actionBtnsContainer.innerHTML = '';
             } else {
                 if(badgeState) badgeState.innerText = "৩-টিম টুর্নামেন্ট ও রোডম্যাপ";
@@ -623,10 +640,8 @@
 
                 if(tableHeaderAction && isAdminLoggedIn) tableHeaderAction.classList.remove('hidden');
 
-                // Render Standings Table with Manual Edit Option for Admin
                 if(standingsBody && tourneyData.teams) {
                     pointsSection.classList.remove('hidden');
-                    let sortedTeams = [...tourneyData.teams].sort((a,b) => b.pts - a.pts || b.gd - a.gd);
                     standingsBody.innerHTML = '';
                     tourneyData.teams.forEach((t, origIdx) => {
                         let editBtn = isAdminLoggedIn ? `<button onclick="updateManualTeamPoints(${origIdx})" class="text-[9px] bg-amber-500 text-black font-bold px-2 py-0.5 rounded">পয়েন্ট এডিট</button>` : '';
@@ -643,7 +658,6 @@
                     });
                 }
 
-                // Render Roadmap Bracket
                 if(roadmapSection && roadmapContainer && tourneyData.fixtures) {
                     roadmapSection.classList.remove('hidden');
                     let sfMatch = tourneyData.fixtures.find(f => f.stage === "sf");
@@ -679,7 +693,6 @@
                     `;
                 }
 
-                // Fixtures List
                 if(fixturesBox && tourneyData.fixtures) {
                     fixturesBox.innerHTML = '';
                     tourneyData.fixtures.forEach(f => {
@@ -725,37 +738,103 @@
             if(confirm("টুর্নামেন্ট মুছে ফেলতে চান?")) dbRefTourney.remove();
         }
 
-        /* --- SQUAD & ACHIEVEMENTS --- */
+        /* --- 40+ ACHIEVEMENTS CONFIGURATION --- */
         const ALL_40_ACHIEVEMENTS = [
             { id: "b1", tier: "Bronze", name: "Rookie Striker", req: "৫+ গোল", desc: "প্রথম ৫টি গোল করা।", check: (m, g, a) => g >= 5 },
             { id: "b2", tier: "Bronze", name: "Playmaker Apprentice", req: "৫+ অ্যাসিস্ট", desc: "৫টি অ্যাসিস্ট করা।", check: (m, g, a) => a >= 5 },
             { id: "b3", tier: "Bronze", name: "Pitch Regular", req: "১০+ ম্যাচ", desc: "১০টি ম্যাচ খেলা।", check: (m, g, a) => m >= 10 },
+            { id: "b4", tier: "Bronze", name: "First Blood", req: "১+ গোল", desc: "প্রথম গোল করা।", check: (m, g, a) => g >= 1 },
+            { id: "b5", tier: "Bronze", name: "Brick Wall Defender", req: "১০+ ম্যাচ", desc: "রক্ষণভাগে দৃঢ়তা।", check: (m, g, a) => m >= 10 },
             { id: "g1", tier: "Gold", name: "Goal Machine", req: "১৫+ গোল", desc: "১৫টি গোল।", check: (m, g, a) => g >= 15 },
-            { id: "e1", tier: "Elite", name: "FFC Legend", req: "৩০+ গোল", desc: "৩০টি গোল।", check: (m, g, a) => g >= 30 }
+            { id: "g2", tier: "Gold", name: "Master Assister", req: "১৫+ অ্যাসিস্ট", desc: "১৫টি অ্যাসিস্ট।", check: (m, g, a) => a >= 15 },
+            { id: "g3", tier: "Gold", name: "Turf General", req: "২৫+ ম্যাচ", desc: "২৫টি ম্যাচ।", check: (m, g, a) => m >= 25 },
+            { id: "e1", tier: "Elite", name: "FFC Legend", req: "৩০+ গোল", desc: "৩০টি গোল।", check: (m, g, a) => g >= 30 },
+            { id: "e2", tier: "Elite", name: "Mastermind Playmaker", req: "২৫+ অ্যাসিস্ট", desc: "২৫টি অ্যাসিস্ট।", check: (m, g, a) => a >= 25 },
+            { id: "e8", tier: "Elite", name: "Iron Man", req: "অ্যাডমিন ব্যাজ", desc: "লড়াকু উপস্থিতি।", custom: "Iron Man" },
+            { id: "e9", tier: "Elite", name: "Captain Fantastic", req: "অ্যাডমিন ব্যাজ", desc: "অধিনায়ক।", custom: "Captain Fantastic" },
+            { id: "e10", tier: "Elite", name: "Hall of Fame", req: "অ্যাডমিন ব্যাজ", desc: "হল অব ফেম।", custom: "Hall of Fame" }
         ];
+
+        function giveAdminExclusiveBadge() {
+            if(!isAdminLoggedIn || !activeModalPlayerId) return;
+            let badgeName = document.getElementById('adminCustomBadgeSelect').value;
+            let player = playersData[activeModalPlayerId];
+            let badges = player.customBadges || [];
+
+            if(!badges.includes(badgeName)) {
+                badges.push(badgeName);
+                dbRefPlayers.child(activeModalPlayerId).update({ customBadges: badges });
+                alert(`সফলভাবে '${badgeName}' ব্যাজটি দেওয়া হয়েছে!`);
+                openProfileModal(activeModalPlayerId);
+            } else {
+                alert("ইতিপূর্বে ব্যাজটি দেওয়া হয়েছে!");
+            }
+        }
+
+        function filterAchievementGallery(tier) {
+            selectedFilterTier = tier;
+            document.querySelectorAll('.ach-filter-btn').forEach(btn => {
+                btn.className = "ach-filter-btn px-3 py-1 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-400";
+            });
+            event.target.className = "ach-filter-btn px-3 py-1 rounded-lg bg-amber-500 text-black font-bold";
+            renderAllAchievementsGallery();
+        }
 
         function renderAllAchievementsGallery() {
             const grid = document.getElementById('allAchievementsGalleryGrid');
+            const badgeCount = document.getElementById('userAchievementCountBadge');
             if(!grid) return;
             let p = currentLoggedInPlayerId && playersData[currentLoggedInPlayerId] ? playersData[currentLoggedInPlayerId] : null;
             let m = p ? (Number(p.matchesPlayed) || 0) : 0;
             let g = p ? (Number(p.goals) || 0) : 0;
             let a = p ? (Number(p.assists) || 0) : 0;
+            let customBadges = p && p.customBadges ? p.customBadges : [];
 
-            grid.innerHTML = ALL_40_ACHIEVEMENTS.map(ach => {
-                let unlocked = p ? ach.check(m, g, a) : false;
-                return `
-                    <div class="border p-3.5 rounded-2xl space-y-1.5 ${unlocked ? 'border-emerald-500 bg-emerald-500/10' : 'border-gray-800 opacity-60' }">
+            let unlockedCount = 0;
+            grid.innerHTML = '';
+            let filtered = ALL_40_ACHIEVEMENTS.filter(ach => selectedFilterTier === 'all' || ach.tier === selectedFilterTier);
+
+            filtered.forEach(ach => {
+                let unlocked = false;
+                if(ach.check) unlocked = p ? ach.check(m, g, a) : false;
+                if(ach.custom) unlocked = p ? customBadges.includes(ach.custom) : false;
+
+                if(unlocked) unlockedCount++;
+                grid.innerHTML += `
+                    <div class="border p-3.5 rounded-2xl space-y-1.5 ${unlocked ? 'border-emerald-500 bg-emerald-500/10' : 'border-gray-800 opacity-60'}">
                         <div class="flex justify-between items-center"><span class="font-bold text-xs">${ach.name}</span><span class="text-[9px] px-2 py-0.5 rounded font-bold ${unlocked ? 'bg-emerald-500 text-black' : 'bg-gray-800 text-gray-400'}">${unlocked ? 'Unlocked' : 'Locked'}</span></div>
                         <p class="text-[11px] text-gray-400">${ach.desc}</p>
                     </div>
                 `;
-            }).join('');
+            });
+            if(badgeCount) badgeCount.innerText = p ? `আনলকড: ${unlockedCount}/40` : `লগইন করুন`;
+        }
+
+        window.openProfileModal = function(id) {
+            activeModalPlayerId = id;
+            const p = playersData[id];
+            if(!p) return;
+            document.getElementById('modalName').innerText = p.name;
+            document.getElementById('modalPos').innerText = p.pos;
+            document.getElementById('modalPhoto').src = p.photo;
+
+            const adminBadgeBox = document.getElementById('adminExclusiveBadgeBox');
+            if(isAdminLoggedIn) adminBadgeBox.classList.remove('hidden');
+            else adminBadgeBox.classList.add('hidden');
+
+            let fullBtn = document.getElementById('modalFullDetailsBtn');
+            fullBtn.setAttribute('onclick', `openDetailedProfilePage('${id}')`);
+            document.getElementById('profileModal').classList.remove('hidden');
+        }
+
+        window.closeProfileModal = function() {
+            document.getElementById('profileModal').classList.add('hidden');
         }
 
         window.openDetailedProfilePage = function(id) {
             const p = playersData[id];
             if(!p) return;
+            closeProfileModal();
             switchTab('squadTab');
             document.getElementById('squadMainView').classList.add('hidden');
             document.getElementById('playerDetailedProfileView').classList.remove('hidden');
@@ -764,6 +843,7 @@
                     <img src="${p.photo}" class="w-24 h-24 rounded-full mx-auto object-cover border-4 border-emerald-500">
                     <h2 class="text-xl font-bold">${p.name}</h2>
                     <p class="text-xs text-gray-400">${p.pos}</p>
+                    <button onclick="closeDetailedProfile()" class="bg-gray-200 dark:bg-gray-800 text-xs px-3 py-1 rounded">ফিরে যান</button>
                 </div>
             `;
         }
@@ -781,7 +861,7 @@
 
             if(grid) {
                 grid.innerHTML = playerList.map(p => `
-                    <div onclick="openDetailedProfilePage('${p.id}')" class="bg-gray-50 dark:bg-gray-950 border p-3 rounded-xl flex items-center justify-between cursor-pointer">
+                    <div onclick="openProfileModal('${p.id}')" class="bg-gray-50 dark:bg-gray-950 border p-3 rounded-xl flex items-center justify-between cursor-pointer">
                         <div class="flex items-center gap-2">
                             <img src="${p.photo}" class="w-8 h-8 rounded-full object-cover border border-emerald-500" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.name)}'">
                             <div><h4 class="font-bold text-xs">${p.name}</h4><span class="text-[10px] text-gray-400">${p.pos}</span></div>
@@ -792,7 +872,7 @@
 
             if(tbody) {
                 tbody.innerHTML = sorted.map(p => `
-                    <tr onclick="openDetailedProfilePage('${p.id}')" class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-950">
+                    <tr onclick="openProfileModal('${p.id}')" class="cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-950">
                         <td class="py-2 px-3 font-bold">${p.name}</td>
                         <td class="py-2 px-3 text-gray-400">${p.pos}</td>
                         <td class="py-2 px-3 text-center text-cyan-500 font-bold">${p.matchesPlayed || 0}</td>
